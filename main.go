@@ -32,29 +32,34 @@ func colorise(color string, msg string) {
 	fmt.Print(color, msg, Reset)
 }
 
-func parseJsonFromFile(path string) map[string]interface{} {
-	colorise(Yellow, fmt.Sprintf("Loading %s... ", path))
+// https://stackoverflow.com/a/36922225/11133327
+func isJson(str string) bool {
+	var js json.RawMessage
+	return json.Unmarshal([]byte(str), &js) == nil
+}
+
+func parseJsonFromFile(path string) (map[string]interface{}, error) {
 	f, err := os.Open(path)
 	if err != nil {
-		colorise(Red, "FAILED! :-(\n")
-		fmt.Println(err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	defer f.Close()
 
 	byteValue, err := ioutil.ReadAll(f)
 	if err != nil {
-		colorise(Red, "FAILED! :-(\n")
-		fmt.Println(err)
-		os.Exit(1)
+		return nil, err
+	}
+
+	// fmt.Print(string(byteValue))
+	if !isJson(string(byteValue)) {
+		return nil, fmt.Errorf("%s is not a valid JSON file\n", path)
 	}
 
 	var result map[string]interface{}
 	json.Unmarshal([]byte(byteValue), &result)
-	colorise(Green, "Done! :-)\n")
 
-	return result
+	return result, nil
 }
 
 func naeqValueFromString(s string) int {
@@ -91,7 +96,16 @@ func main() {
 
 	var book map[string]interface{}
 	if path != "" {
-		book = parseJsonFromFile(path)
+		var err error
+		colorise(Yellow, fmt.Sprintf("Loading %s... ", path))
+		book, err = parseJsonFromFile(path)
+		if err != nil {
+			colorise(Red, "FAILED! :-(\n")
+			fmt.Println(err)
+			flag.Usage()
+			os.Exit(1)
+		}
+		colorise(Green, "Done! :-)\n")
 	} else {
 		colorise(Yellow, "Loading Liber Al Vegis...")
 		json.Unmarshal([]byte(liberAlBytes), &book)
