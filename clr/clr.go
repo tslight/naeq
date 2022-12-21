@@ -16,6 +16,10 @@ func Print(clr string, msg string) {
 	fmt.Print(clr, msg, Off)
 }
 
+func Println(clr string, msg string) {
+	fmt.Println(clr, msg, Off)
+}
+
 func Printf(clr string, msg string, v ...interface{}) {
 	fmt.Print(clr)
 	fmt.Printf(msg, v...)
