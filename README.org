@@ -75,3 +75,20 @@ value using the values of phrases or words from Liber AL as a key. By analyzing
 words or phrases in Liber AL that had the same values, one could arrive at
 further insight, or obtain major revelations about the nature of these entities
 or their motivations.
+
+* How to Use this Tool
+
+Type a word or phrase into the search bar. The ALW cipher value will
+automatically be calculated and a list of letters, words and phrases (of up to
+16 words) from Liber AL of equal value will be shown.
+
+How you interpret this data is up to you. We have found insight stringing
+together multiple phrases or words with the same value that fit grammatically
+into something resembling cut-up method poetry, as well as picking out phrases
+that resonated with the name or phrase we were analyzing. Results are open to
+interpretation and a bit of psychic intuition plays part. Use your imagination.
+
+Do not read deeply into the order of the results displayed. Individual matches
+are not neccessarily meant to be interpreted as one string of text; indeed,
+results will often make little grammatical sense, though occasional happy
+accidents occur.
