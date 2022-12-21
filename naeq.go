@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/tslight/naeq/clr"
 	"github.com/tslight/naeq/jsn"
+	"log"
 	"os"
 	"reflect"
 	"regexp"
@@ -21,9 +22,8 @@ var liberAlBytes []byte
 
 func GetInput(args []string) (*bufio.Scanner, error) {
 	if len(args) > 0 {
-		return bufio.NewScanner(strings.NewReader(strings.Join(args, "\n"))), nil
+		return bufio.NewScanner(strings.NewReader(strings.Join(args, " "))), nil
 	}
-
 	in := os.Stdin
 	i, err := in.Stat()
 	if err != nil {
@@ -31,13 +31,13 @@ func GetInput(args []string) (*bufio.Scanner, error) {
 	}
 	size := i.Size()
 	if size == 0 {
-		return nil, clr.Errorf("No input!")
+		fmt.Print("Enter text: ")
 	}
 
-	return bufio.NewScanner(in), nil
+	return bufio.NewScanner(os.Stdin), nil
 }
 
-func NaeqFromString(s string) int {
+func GetNaeq(s string) int {
 	// https://gosamples.dev/remove-non-alphanumeric/
 	var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
 	s = nonAlphanumericRegex.ReplaceAllString(s, "")
@@ -67,9 +67,7 @@ func GetBook(path string) map[string]interface{} {
 		book, err = jsn.FromFile(path)
 		if err != nil {
 			clr.Print(clr.Red, "FAILED! :-(\n")
-			fmt.Println(err)
-			flag.Usage()
-			os.Exit(1)
+			log.Fatalln(err)
 		}
 		clr.Print(clr.Grn, "Done! :-)\n")
 	} else {
@@ -92,18 +90,12 @@ func main() {
 	flag.Parse()
 	input, err := GetInput(flag.Args())
 	if err != nil {
-		fmt.Println(err)
-		flag.Usage()
-		os.Exit(1)
+		log.Fatalln(err)
 	}
-	value := 0
-
-	// Iterate over each input value.
-	for input.Scan() {
-		arg := input.Text()
-		v := NaeqFromString(arg)
-		// fmt.Printf("%s NAEQ Sum: %d\n", arg, v)
-		value += v
+	input.Scan()
+	value := GetNaeq(input.Text())
+	if err := input.Err(); err != nil {
+		log.Fatalln(err)
 	}
 
 	book := GetBook(path)
