@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	_ "embed"
 	"encoding/json"
 	"flag"
@@ -10,6 +11,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"strings"
 	"unicode"
 )
 
@@ -20,6 +22,7 @@ var cipherBytes []byte
 var liberAlBytes []byte
 
 func NaeqFromString(s string) int {
+	s = strings.ReplaceAll(s, " ", "")
 	var cipher map[string]interface{}
 	json.Unmarshal([]byte(cipherBytes), &cipher)
 	value := 0
@@ -61,6 +64,23 @@ func GetBook(path string) map[string]interface{} {
 	return book
 }
 
+func GetInput(args []string) (*bufio.Scanner, error) {
+	if len(args) > 0 {
+		return bufio.NewScanner(strings.NewReader(strings.Join(args, "\n"))), nil
+	}
+
+	in := os.Stdin
+	i, err := in.Stat()
+	if err != nil {
+		return nil, err
+	}
+	size := i.Size()
+	if size == 0 {
+		return nil, clr.Errorf("No input!")
+	}
+	return bufio.NewScanner(in), nil
+}
+
 func main() {
 	var count int
 	var path string
@@ -71,23 +91,23 @@ func main() {
 	flag.IntVar(&count, "n", 0, "number of matches to show")
 	flag.StringVar(&path, "p", "", "path to alternative book")
 	flag.Parse()
-
-	value := 0
-	remainingArgs := flag.NArg()
-	if remainingArgs < 1 {
-		clr.Print(clr.Red, "No words to process!\n")
+	input, err := GetInput(flag.Args())
+	if err != nil {
+		fmt.Println(err)
 		flag.Usage()
 		os.Exit(1)
 	}
+	value := 0
 
-	book := GetBook(path)
-
-	for i := 0; i < remainingArgs; i++ {
-		arg := flag.Arg(i)
+	// Iterate over each input value.
+	for input.Scan() {
+		arg := input.Text()
 		v := NaeqFromString(arg)
 		// fmt.Printf("%s NAEQ Sum: %d\n", arg, v)
 		value += v
 	}
+
+	book := GetBook(path)
 
 	s := strconv.Itoa(value)
 	clr.Printf(clr.Yel, "NAEQ Sum:%s %s\n", clr.Grn, s)
