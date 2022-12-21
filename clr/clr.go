@@ -20,6 +20,10 @@ func Println(clr string, msg string) {
 	fmt.Println(clr, msg, Off)
 }
 
+func Errorf(msg string) error {
+	return fmt.Errorf("%s%s%s", Red, msg, Off)
+}
+
 func Printf(clr string, msg string, v ...interface{}) {
 	fmt.Print(clr)
 	fmt.Printf(msg, v...)
