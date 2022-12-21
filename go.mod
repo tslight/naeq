@@ -1,3 +1,3 @@
-module naeq
+module github.com/tslight/naeq
 
 go 1.17
