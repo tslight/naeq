@@ -10,6 +10,7 @@ import (
 	"github.com/tslight/naeq/jsn"
 	"os"
 	"reflect"
+	"regexp"
 	"strconv"
 	"strings"
 	"unicode"
@@ -21,8 +22,12 @@ var cipherBytes []byte
 //go:embed books/liber-AL.json
 var liberAlBytes []byte
 
+// https://gosamples.dev/remove-non-alphanumeric/
+var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
+
 func NaeqFromString(s string) int {
-	s = strings.ReplaceAll(s, " ", "")
+	s = nonAlphanumericRegex.ReplaceAllString(s, "")
+	fmt.Println(s)
 	var cipher map[string]interface{}
 	json.Unmarshal([]byte(cipherBytes), &cipher)
 	value := 0
