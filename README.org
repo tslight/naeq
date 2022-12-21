@@ -2,6 +2,14 @@
 
 Inspired by https://www.naeq.io/ & http://www.naequery.com/
 
+#+begin_src txt
+Usage: naeq [options...] <words to process>:
+  -n int
+        number of matches to show
+  -p string
+        path to alternative book
+#+end_src
+
 * Gematria and Qabalah
 
 Hermetic Qabalah is a derivative of a school of Jewish mysticism called
