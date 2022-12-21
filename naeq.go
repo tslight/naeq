@@ -16,31 +16,42 @@ import (
 	"unicode"
 )
 
-//go:embed cipher.json
-var cipherBytes []byte
-
 //go:embed books/liber-AL.json
 var liberAlBytes []byte
 
-// https://gosamples.dev/remove-non-alphanumeric/
-var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
+func GetInput(args []string) (*bufio.Scanner, error) {
+	if len(args) > 0 {
+		return bufio.NewScanner(strings.NewReader(strings.Join(args, "\n"))), nil
+	}
+
+	in := os.Stdin
+	i, err := in.Stat()
+	if err != nil {
+		return nil, err
+	}
+	size := i.Size()
+	if size == 0 {
+		return nil, clr.Errorf("No input!")
+	}
+
+	return bufio.NewScanner(in), nil
+}
 
 func NaeqFromString(s string) int {
+	// https://gosamples.dev/remove-non-alphanumeric/
+	var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
 	s = nonAlphanumericRegex.ReplaceAllString(s, "")
-	fmt.Println(s)
-	var cipher map[string]interface{}
-	json.Unmarshal([]byte(cipherBytes), &cipher)
+	s = strings.ToLower(s)
+
 	value := 0
 	var v int
-	for _, char := range s {
-		if unicode.IsNumber(char) {
-			// fmt.Printf("%c is a number\n", char)
+	for _, c := range s {
+		if unicode.IsNumber(c) {
 			// https://itecnote.com/tecnote/go-convert-rune-to-int/
 			// https://stackoverflow.com/a/21322694/11133327 - Bizarre!
-			v = int(char - '0')
+			v = int(c - '0')
 		} else {
-			// fmt.Printf("%c is NOT a number\n", char)
-			v = int(cipher[string(char)].(float64))
+			v = int(c-'a')*19%26 + 1
 		}
 		value += v
 	}
@@ -67,23 +78,6 @@ func GetBook(path string) map[string]interface{} {
 		clr.Print(clr.Grn, "Done! :-)\n")
 	}
 	return book
-}
-
-func GetInput(args []string) (*bufio.Scanner, error) {
-	if len(args) > 0 {
-		return bufio.NewScanner(strings.NewReader(strings.Join(args, "\n"))), nil
-	}
-
-	in := os.Stdin
-	i, err := in.Stat()
-	if err != nil {
-		return nil, err
-	}
-	size := i.Size()
-	if size == 0 {
-		return nil, clr.Errorf("No input!")
-	}
-	return bufio.NewScanner(in), nil
 }
 
 func main() {
