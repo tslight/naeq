@@ -1,13 +1,17 @@
 # New Aeon English Qabalah CLI ![example event parameter](https://github.com/tslight/naeq/actions/workflows/go-build-and-test.yml/badge.svg?event=push)
 
-Inspired by https://www.naeq.io/ & http://www.naequery.com/
+Inspired by [this](https://www.naeq.io/) & [this](http://www.naequery.com/)
 
 ``` text
 Usage: naeq [options...] <words to process>:
+  -b string
+        embedded book (default "books/liber-al.json")
+  -l    list available embedded books
   -n int
         number of matches to show
   -p string
         path to alternative book
+  -r    display raw unformatted output
 ```
 
 ## Gematria and Qabalah
