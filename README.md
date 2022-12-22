@@ -9,6 +9,14 @@ fascinating
 [this](https://www.naeq.io/) & [this](http://www.naequery.com/) web based
 versions.
 
+## Installation
+
+``` shell
+go install github.com/tslight/naeq@latest
+```
+
+## Usage
+
 ``` text
 Usage: naeq [options...] <words>:
   -L    list embedded books with name
