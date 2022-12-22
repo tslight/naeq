@@ -3,11 +3,9 @@ package main
 import (
 	"bufio"
 	"embed"
-	// "encoding/json"
 	"flag"
 	"fmt"
-	"github.com/tslight/naeq/clr"
-	"github.com/tslight/naeq/jsn"
+	"github.com/tslight/naeq/json"
 	"io/fs"
 	"log"
 	"os"
@@ -73,7 +71,7 @@ func GetNaeq(s string) (int, error) {
 func GetBookFromPath(path string) map[string]interface{} {
 	var book map[string]interface{}
 	var err error
-	book, err = jsn.FromPath(path)
+	book, err = json.FromPath(path)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -83,29 +81,18 @@ func GetBookFromPath(path string) map[string]interface{} {
 func GetBookFromEFSPath(efs embed.FS, path string) map[string]interface{} {
 	var book map[string]interface{}
 	var err error
-	book, err = jsn.FromEFSPath(efs, path)
+	book, err = json.FromEFSPath(efs, path)
 	if err != nil {
 		log.Fatalln(err)
 	}
 	return book
 }
 
-func GetMatches(s string, b map[string]interface{}) ([]interface{}, string, error) {
-	stats := clr.Sprintf(clr.Yel, "Words:%s %s\n", clr.Grn, s)
-
-	value, err := GetNaeq(s)
-	if err != nil {
-		return nil, "", err
-	}
-	stats += clr.Sprintf(clr.Yel, "NAEQ Sum:%s %d\n", clr.Grn, value)
-
-	stats += clr.Sprintf(clr.Yel, "Book:%s %v\n", clr.Grn, b["name"])
-
-	key := strconv.Itoa(value)
+func GetMatches(naeq int, b map[string]interface{}) []interface{} {
+	key := strconv.Itoa(naeq)
 	matches := reflect.ValueOf(b[key]).Interface().([]interface{})
-	stats += clr.Sprintf(clr.Yel, "Matches: %s%d\n", clr.Grn, len(matches))
 
-	return matches, stats, err
+	return matches
 }
 
 func getAllFilenames(efs *embed.FS) (files []string, err error) {
@@ -129,10 +116,10 @@ func getBookNames(withLongName bool) string {
 	}
 	for _, v := range bookNames {
 		liberName := strings.TrimSuffix(filepath.Base(v), filepath.Ext(v))
-		s += clr.Sprint(clr.Yel, liberName)
+		s += fmt.Sprint(liberName)
 		if withLongName {
 			book := GetBookFromEFSPath(books, v)
-			s += clr.Sprintf(clr.Grn, " (%s)", book["name"])
+			s += fmt.Sprintf(" (%s)", book["name"])
 		}
 		s += "\n"
 	}
@@ -142,7 +129,7 @@ func getBookNames(withLongName bool) string {
 func main() {
 	var count int
 	var path, efsBook string
-	var raw, list, long bool
+	var raw, list, long, sum bool
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words>:\n", os.Args[0])
 		flag.PrintDefaults()
@@ -154,6 +141,7 @@ func main() {
 	flag.BoolVar(&raw, "r", false, "display raw unformatted output")
 	flag.BoolVar(&list, "l", false, "list embedded books")
 	flag.BoolVar(&long, "L", false, "list embedded books with name")
+	flag.BoolVar(&sum, "s", false, "only return naeq sum")
 	flag.Parse()
 
 	if list || long {
@@ -172,20 +160,24 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	naeq, err := GetNaeq(words)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if sum {
+		fmt.Println(naeq)
+		return
+	}
+
 	var book map[string]interface{}
 	if path != "" {
 		book = GetBookFromPath(path)
 	} else {
 		book = GetBookFromEFSPath(books, fmt.Sprint("books/", efsBook, ".json"))
 	}
-	matches, stats, err := GetMatches(words, book)
-	if err != nil {
-		log.Fatalln(err)
-	}
 
-	if !raw {
-		fmt.Print(stats)
-	}
+	matches := GetMatches(naeq, book)
 
 	for k, v := range matches {
 		if count > 0 && k >= count {

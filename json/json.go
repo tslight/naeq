@@ -1,4 +1,4 @@
-package jsn
+package json
 
 import (
 	"embed"
@@ -20,7 +20,6 @@ func FromEFSPath(fs embed.FS, path string) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	// fmt.Print(string(byteValue))
 	if !Valid(string(byteValue)) {
 		return nil, fmt.Errorf("%s is not a valid JSON file\n", path)
 	}
@@ -44,7 +43,6 @@ func FromPath(path string) (map[string]interface{}, error) {
 		return nil, err
 	}
 
-	// fmt.Print(string(byteValue))
 	if !Valid(string(byteValue)) {
 		return nil, fmt.Errorf("%s is not a valid JSON file\n", path)
 	}

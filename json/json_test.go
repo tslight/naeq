@@ -1,4 +1,4 @@
-package jsn
+package json
 
 import (
 	"fmt"
