@@ -3,10 +3,11 @@
 Inspired by [this](https://www.naeq.io/) & [this](http://www.naequery.com/)
 
 ``` text
-Usage: naeq [options...] <words to process>:
+Usage: naeq [options...] <words>:
+  -L    list embedded books with name
   -b string
-        embedded book (default "books/liber-al.json")
-  -l    list available embedded books
+        embedded book (default "liber-al")
+  -l    list embedded books
   -n int
         number of matches to show
   -p string
