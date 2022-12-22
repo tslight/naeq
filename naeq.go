@@ -14,7 +14,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"unicode"
 )
 
 //go:embed books/liber-AL.json
@@ -37,43 +36,48 @@ func GetInput(args []string) (*bufio.Scanner, error) {
 	return bufio.NewScanner(os.Stdin), nil
 }
 
-func GetNaeq(s string) int {
-	// https://gosamples.dev/remove-non-alphanumeric/
-	var nonAlphanumericRegex = regexp.MustCompile(`[^a-zA-Z0-9]+`)
-	s = nonAlphanumericRegex.ReplaceAllString(s, "")
-	s = strings.ToLower(s)
-
+func sumNumbersInString(s string) (int, error) {
 	value := 0
-	var v int
-	for _, c := range s {
-		if unicode.IsNumber(c) {
-			// https://itecnote.com/tecnote/go-convert-rune-to-int/
-			// https://stackoverflow.com/a/21322694/11133327 - Bizarre!
-			v = int(c - '0')
-		} else {
-			v = int(c-'a')*19%26 + 1
+	numericRegex := regexp.MustCompile(`\d+`)
+	matches := numericRegex.FindAllString(s, -1)
+	for _, m := range matches {
+		v, err := strconv.Atoi(m)
+		if err != nil {
+			return 0, err
 		}
 		value += v
 	}
+	return value, nil
+}
 
-	return value
+func GetNaeq(s string) (int, error) {
+	// sum all numbers first
+	value, err := sumNumbersInString(s)
+	if err != nil {
+		return 0, err
+	}
+
+	nonAlphaRegex := regexp.MustCompile(`[^a-zA-Z]+`)
+	s = nonAlphaRegex.ReplaceAllString(s, "")
+	s = strings.ToLower(s)
+
+	for _, c := range s {
+		value += int(c-'a')*19%26 + 1
+	}
+
+	return value, nil
 }
 
 func GetBook(path string) map[string]interface{} {
 	var book map[string]interface{}
 	if path != "" {
 		var err error
-		clr.Print(clr.Yel, fmt.Sprintf("Loading %s... ", path))
 		book, err = jsn.FromFile(path)
 		if err != nil {
-			clr.Print(clr.Red, "FAILED! :-(\n")
 			log.Fatalln(err)
 		}
-		clr.Print(clr.Grn, "Done! :-)\n")
 	} else {
-		clr.Print(clr.Yel, "Loading Liber Al Vegis... ")
 		json.Unmarshal([]byte(liberAlBytes), &book)
-		clr.Print(clr.Grn, "Done! :-)\n")
 	}
 	return book
 }
@@ -92,16 +96,25 @@ func main() {
 	if err != nil {
 		log.Fatalln(err)
 	}
+
 	input.Scan()
-	value := GetNaeq(input.Text())
+	words := input.Text()
 	if err := input.Err(); err != nil {
 		log.Fatalln(err)
 	}
+	clr.Printf(clr.Yel, "Words:%s %s\n", clr.Grn, words)
+
+	value, err := GetNaeq(words)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	clr.Printf(clr.Yel, "NAEQ Sum:%s %d\n", clr.Grn, value)
 
 	book := GetBook(path)
+	clr.Printf(clr.Yel, "Book:%s %v\n", clr.Grn, book["name"])
 
 	s := strconv.Itoa(value)
-	clr.Printf(clr.Yel, "NAEQ Sum:%s %s\n", clr.Grn, s)
 
 	matches := book[s]
 	m := reflect.ValueOf(matches)
