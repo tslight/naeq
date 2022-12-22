@@ -2,12 +2,13 @@ package main
 
 import (
 	"bufio"
-	_ "embed"
-	"encoding/json"
+	"embed"
+	// "encoding/json"
 	"flag"
 	"fmt"
 	"github.com/tslight/naeq/clr"
 	"github.com/tslight/naeq/jsn"
+	"io/fs"
 	"log"
 	"os"
 	"reflect"
@@ -16,8 +17,8 @@ import (
 	"strings"
 )
 
-//go:embed books/liber-AL.json
-var liberAlBytes []byte
+//go:embed books/*.json
+var books embed.FS
 
 func GetInput(args []string) (*bufio.Scanner, error) {
 	if len(args) > 0 {
@@ -68,21 +69,27 @@ func GetNaeq(s string) (int, error) {
 	return value, nil
 }
 
-func GetBook(path string) map[string]interface{} {
+func GetBookFromPath(path string) map[string]interface{} {
 	var book map[string]interface{}
-	if path != "" {
-		var err error
-		book, err = jsn.FromFile(path)
-		if err != nil {
-			log.Fatalln(err)
-		}
-	} else {
-		json.Unmarshal([]byte(liberAlBytes), &book)
+	var err error
+	book, err = jsn.FromPath(path)
+	if err != nil {
+		log.Fatalln(err)
 	}
 	return book
 }
 
-func GetMatches(s string, p string) ([]interface{}, string, error) {
+func GetBookFromEFSPath(efs embed.FS, path string) map[string]interface{} {
+	var book map[string]interface{}
+	var err error
+	book, err = jsn.FromEFSPath(efs, path)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	return book
+}
+
+func GetMatches(s string, b map[string]interface{}) ([]interface{}, string, error) {
 	stats := clr.Sprintf(clr.Yel, "Words:%s %s\n", clr.Grn, s)
 
 	value, err := GetNaeq(s)
@@ -91,26 +98,55 @@ func GetMatches(s string, p string) ([]interface{}, string, error) {
 	}
 	stats += clr.Sprintf(clr.Yel, "NAEQ Sum:%s %d\n", clr.Grn, value)
 
-	book := GetBook(p)
-	stats += clr.Sprintf(clr.Yel, "Book:%s %v\n", clr.Grn, book["name"])
+	stats += clr.Sprintf(clr.Yel, "Book:%s %v\n", clr.Grn, b["name"])
 
 	key := strconv.Itoa(value)
-	matches := reflect.ValueOf(book[key]).Interface().([]interface{})
+	matches := reflect.ValueOf(b[key]).Interface().([]interface{})
 	stats += clr.Sprintf(clr.Yel, "Matches: %s%d\n", clr.Grn, len(matches))
 
 	return matches, stats, err
 }
 
+func getAllFilenames(efs *embed.FS) (files []string, err error) {
+	if err := fs.WalkDir(efs, ".", func(path string, d fs.DirEntry, err error) error {
+		if d.IsDir() {
+			return nil
+		}
+		files = append(files, path)
+		return nil
+	}); err != nil {
+		return nil, err
+	}
+	return files, nil
+}
+
 func main() {
 	var count int
-	var path string
+	var bookPath, efsBookPath string
+	var raw, list bool
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words to process>:\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 	flag.IntVar(&count, "n", 0, "number of matches to show")
-	flag.StringVar(&path, "p", "", "path to alternative book")
+	flag.StringVar(&bookPath, "p", "", "path to alternative book")
+	flag.StringVar(&efsBookPath, "b", "books/liber-al.json", "embedded book")
+	flag.BoolVar(&raw, "r", false, "display raw unformatted output")
+	flag.BoolVar(&list, "l", false, "list available embedded books")
 	flag.Parse()
+
+	if list {
+		bookNames, err := getAllFilenames(&books)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		clr.Print(clr.Cyn, "Available Embedded Book Paths:\n")
+		for _, v := range bookNames {
+			fmt.Println(v)
+		}
+		return
+	}
+
 	input, err := GetInput(flag.Args())
 	if err != nil {
 		log.Fatalln(err)
@@ -122,16 +158,29 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	matches, stats, err := GetMatches(words, path)
+	var book map[string]interface{}
+	if bookPath != "" {
+		book = GetBookFromPath(bookPath)
+	} else {
+		book = GetBookFromEFSPath(books, efsBookPath)
+	}
+	matches, stats, err := GetMatches(words, book)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Print(stats)
+
+	if !raw {
+		fmt.Print(stats)
+	}
 
 	for k, v := range matches {
 		if count > 0 && k >= count {
 			break
 		}
-		fmt.Printf("%d: %s\n", k+1, v)
+		if raw {
+			fmt.Println(v)
+		} else {
+			fmt.Printf("%d: %s\n", k+1, v)
+		}
 	}
 }
