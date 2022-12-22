@@ -129,7 +129,7 @@ func getBookNames(withLongName bool) string {
 func main() {
 	var count int
 	var path, efsBook string
-	var raw, list, long, sum bool
+	var list, long, sum bool
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words>:\n", os.Args[0])
 		flag.PrintDefaults()
@@ -138,7 +138,6 @@ func main() {
 	flag.IntVar(&count, "n", 0, "number of matches to show")
 	flag.StringVar(&path, "p", "", "path to alternative book")
 	flag.StringVar(&efsBook, "b", "liber-al", "embedded book")
-	flag.BoolVar(&raw, "r", false, "display raw unformatted output")
 	flag.BoolVar(&list, "l", false, "list embedded books")
 	flag.BoolVar(&long, "L", false, "list embedded books with name")
 	flag.BoolVar(&sum, "s", false, "only return naeq sum")
@@ -183,10 +182,6 @@ func main() {
 		if count > 0 && k >= count {
 			break
 		}
-		if raw {
-			fmt.Println(v)
-		} else {
-			fmt.Printf("%d: %s\n", k+1, v)
-		}
+		fmt.Println(v)
 	}
 }
