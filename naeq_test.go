@@ -75,8 +75,8 @@ func TestGetNaeqAlphabet(t *testing.T) {
 // Check using https://www.naeq.io/
 func TestGetNaeqMatches(t *testing.T) {
 	s := "foo"
-	p := ""
-	got, _, err := GetMatches(s, p)
+	b := GetBookFromEFSPath(books, "books/liber-al.json")
+	got, _, err := GetMatches(s, b)
 	want := append(make([]interface{}, 0),
 		"3 8 a b",
 		"a b k 2",
@@ -95,18 +95,18 @@ func TestGetNaeqMatches(t *testing.T) {
 		"what",
 	)
 	if err != nil {
-		t.Fatalf("GetMatches(%s %s)\nWanted: %v\nReceived: %v", s, p, want, err)
+		t.Fatalf("GetMatches(%s %s)\nWanted: %v\nReceived: %v", s, b, want, err)
 	}
 	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
-		t.Fatalf("GetMatches(%s %s)\nWanted: %v\nReceived: %v", s, p, want, got)
+		t.Fatalf("GetMatches(%s %s)\nWanted: %v\nReceived: %v", s, b, want, got)
 	}
 }
 
 // Check using https://www.naequery.com/
 func TestGetNaeqMatchesFooBarBazLiberI(t *testing.T) {
 	s := "foobarbaz"
-	p := "./books/liber-i.json"
-	got, _, err := GetMatches(s, p)
+	b := GetBookFromEFSPath(books, "books/liber-i.json")
+	got, _, err := GetMatches(s, b)
 	want := append(make([]interface{}, 0),
 		"destroy",
 		"doth the",
@@ -118,9 +118,9 @@ func TestGetNaeqMatchesFooBarBazLiberI(t *testing.T) {
 		"here is",
 	)
 	if err != nil {
-		t.Fatalf(`GetMatches(%s %s)\nWanted: %v\nReceived: %v`, s, p, want, err)
+		t.Fatalf(`GetMatches(%s %s)\nWanted: %v\nReceived: %v`, s, b, want, err)
 	}
 	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
-		t.Fatalf(`GetMatches(%s %s)\nWanted: %v\nReceived: %v`, s, p, want, got)
+		t.Fatalf(`GetMatches(%s %s)\nWanted: %v\nReceived: %v`, s, b, want, got)
 	}
 }

@@ -23,9 +23,9 @@ func TestNotValid(t *testing.T) {
 	}
 }
 
-func TestFromFile(t *testing.T) {
+func TestFromPath(t *testing.T) {
 	path := "./test.json"
-	got, err := FromFile(path)
+	got, err := FromPath(path)
 	want := map[string]interface{}{
 		"new": "kirk",
 	}
@@ -37,9 +37,9 @@ func TestFromFile(t *testing.T) {
 	}
 }
 
-func TestFromInvalidFile(t *testing.T) {
+func TestFromInvalidPath(t *testing.T) {
 	path := "./not/a/real/path"
-	_, err := FromFile(path)
+	_, err := FromPath(path)
 	want := fmt.Errorf("open %s: no such file or directory", path)
 	if err.Error() != want.Error() {
 		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, path, err, want)
