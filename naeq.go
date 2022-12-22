@@ -121,13 +121,32 @@ func getAllFilenames(efs *embed.FS) (files []string, err error) {
 	return files, nil
 }
 
+func getBookNames(withLongName bool) string {
+	bookNames, err := getAllFilenames(&books)
+	var s string
+	if err != nil {
+		log.Fatalln(err)
+	}
+	for _, v := range bookNames {
+		liberName := strings.TrimSuffix(filepath.Base(v), filepath.Ext(v))
+		s += clr.Sprint(clr.Yel, liberName)
+		if withLongName {
+			book := GetBookFromEFSPath(books, v)
+			s += clr.Sprintf(clr.Grn, " (%s)", book["name"])
+		}
+		s += "\n"
+	}
+	return s
+}
+
 func main() {
 	var count int
 	var path, efsBook string
 	var raw, list, long bool
 	flag.Usage = func() {
-		fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words to process>:\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words>:\n", os.Args[0])
 		flag.PrintDefaults()
+		// fmt.Fprintf(os.Stderr, getBookNames(false))
 	}
 	flag.IntVar(&count, "n", 0, "number of matches to show")
 	flag.StringVar(&path, "p", "", "path to alternative book")
@@ -138,19 +157,7 @@ func main() {
 	flag.Parse()
 
 	if list || long {
-		bookNames, err := getAllFilenames(&books)
-		if err != nil {
-			log.Fatalln(err)
-		}
-		for _, v := range bookNames {
-			liberName := strings.TrimSuffix(filepath.Base(v), filepath.Ext(v))
-			clr.Print(clr.Yel, liberName)
-			if long {
-				book := GetBookFromEFSPath(books, v)
-				clr.Printf(clr.Grn, " (%s)", book["name"])
-			}
-			fmt.Println()
-		}
+		fmt.Print(getBookNames(long))
 		return
 	}
 
