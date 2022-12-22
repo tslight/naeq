@@ -15,3 +15,12 @@ func TestSprintf(t *testing.T) {
 		t.Fatalf(`Sprintf(%v, %s) returned %s, instead of %s`, c, s, got, want)
 	}
 }
+
+func TestErrorf(t *testing.T) {
+	s := "hellier"
+	got := Errorf("hellier")
+	want := fmt.Errorf("\u001b[1;31mhellier\u001b[0m")
+	if got.Error() != want.Error() {
+		t.Fatalf(`Sprintf(%s) returned %s, instead of %s`, s, got, want)
+	}
+}
