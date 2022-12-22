@@ -82,6 +82,25 @@ func GetBook(path string) map[string]interface{} {
 	return book
 }
 
+func GetMatches(s string, p string) ([]interface{}, error) {
+	value, err := GetNaeq(s)
+	if err != nil {
+		return nil, err
+	}
+
+	clr.Printf(clr.Yel, "NAEQ Sum:%s %d\n", clr.Grn, value)
+
+	book := GetBook(p)
+	clr.Printf(clr.Yel, "Book:%s %v\n", clr.Grn, book["name"])
+
+	key := strconv.Itoa(value)
+
+	matches := reflect.ValueOf(book[key]).Interface().([]interface{})
+	clr.Printf(clr.Yel, "Matches: %s%d\n", clr.Grn, len(matches))
+
+	return matches, err
+}
+
 func main() {
 	var count int
 	var path string
@@ -104,26 +123,15 @@ func main() {
 	}
 	clr.Printf(clr.Yel, "Words:%s %s\n", clr.Grn, words)
 
-	value, err := GetNaeq(words)
+	matches, err := GetMatches(words, path)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	clr.Printf(clr.Yel, "NAEQ Sum:%s %d\n", clr.Grn, value)
-
-	book := GetBook(path)
-	clr.Printf(clr.Yel, "Book:%s %v\n", clr.Grn, book["name"])
-
-	s := strconv.Itoa(value)
-
-	matches := book[s]
-	m := reflect.ValueOf(matches)
-	numberOfMatches := m.Len()
-	clr.Printf(clr.Yel, "Matches: %s%d\n", clr.Grn, numberOfMatches)
-	for i := 0; i < numberOfMatches; i++ {
-		if count > 0 && i >= count {
+	for k, v := range matches {
+		if count > 0 && k >= count {
 			break
 		}
-		fmt.Println(m.Index(i))
+		fmt.Printf("%d: %s\n", k+1, v)
 	}
 }
