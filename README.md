@@ -1,6 +1,13 @@
-# New Aeon English Qabalah CLI ![example event parameter](https://github.com/tslight/naeq/actions/workflows/go-build-and-test.yml/badge.svg?event=push)
+# Secret Cipher of the UFOnauts CLI ![example event parameter](https://github.com/tslight/naeq/actions/workflows/go-build-and-test.yml/badge.svg?event=push)
 
-Inspired by [this](https://www.naeq.io/) & [this](http://www.naequery.com/)
+Inspired from [Allen
+Greenfield's](https://en.wikipedia.org/wiki/Allen_H._Greenfield) bizarre &
+fascinating
+[book](https://www.amazon.co.uk/Complete-SECRET-CIPHER-UfOnauts/dp/171864535X)
+& it's usage in the equally bizarre & fascinating
+[Hellier](https://www.hellier.tv/) TV show, taking cues from
+[this](https://www.naeq.io/) & [this](http://www.naequery.com/) web based
+versions.
 
 ``` text
 Usage: naeq [options...] <words>:
