@@ -11,6 +11,7 @@ import (
 	"io/fs"
 	"log"
 	"os"
+	"path/filepath"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -122,17 +123,18 @@ func getAllFilenames(efs *embed.FS) (files []string, err error) {
 
 func main() {
 	var count int
-	var bookPath, efsBookPath string
-	var raw, list bool
+	var path, efsBook string
+	var raw, list, long bool
 	flag.Usage = func() {
 		fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words to process>:\n", os.Args[0])
 		flag.PrintDefaults()
 	}
 	flag.IntVar(&count, "n", 0, "number of matches to show")
-	flag.StringVar(&bookPath, "p", "", "path to alternative book")
-	flag.StringVar(&efsBookPath, "b", "books/liber-al.json", "embedded book")
+	flag.StringVar(&path, "p", "", "path to alternative book")
+	flag.StringVar(&efsBook, "b", "liber-al", "embedded book")
 	flag.BoolVar(&raw, "r", false, "display raw unformatted output")
-	flag.BoolVar(&list, "l", false, "list available embedded books")
+	flag.BoolVar(&list, "l", false, "list embedded books")
+	flag.BoolVar(&long, "L", false, "list embedded books with name")
 	flag.Parse()
 
 	if list {
@@ -140,9 +142,14 @@ func main() {
 		if err != nil {
 			log.Fatalln(err)
 		}
-		clr.Print(clr.Cyn, "Available Embedded Book Paths:\n")
 		for _, v := range bookNames {
-			fmt.Println(v)
+			liberName := strings.TrimSuffix(filepath.Base(v), filepath.Ext(v))
+			clr.Print(clr.Yel, liberName)
+			if long {
+				book := GetBookFromEFSPath(books, v)
+				clr.Printf(clr.Grn, " (%s)", book["name"])
+			}
+			fmt.Println()
 		}
 		return
 	}
@@ -159,10 +166,10 @@ func main() {
 	}
 
 	var book map[string]interface{}
-	if bookPath != "" {
-		book = GetBookFromPath(bookPath)
+	if path != "" {
+		book = GetBookFromPath(path)
 	} else {
-		book = GetBookFromEFSPath(books, efsBookPath)
+		book = GetBookFromEFSPath(books, fmt.Sprint("books/", efsBook, ".json"))
 	}
 	matches, stats, err := GetMatches(words, book)
 	if err != nil {
