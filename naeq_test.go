@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
@@ -71,22 +72,55 @@ func TestGetNaeqAlphabet(t *testing.T) {
 	}
 }
 
-// func TestGetNaeqMatches(t *testing.T) {
-//  got, err := GetMatches("foobarbaz", "./books/liber-i.json")
-//  want := struct {
-//    "destroy"
-//    "doth the"
-//    "for he is"
-//    "burden"
-//    "being a"
-//    "and is not"
-//    "the whole"
-//    "here is"
-//  }{}
-//  if err != nil {
-//    t.Fatalf(`GetNaeq(%s) returned %d, instead of %d`, s, err, want)
-//  }
-//  if got != want {
-//    t.Fatalf(`GetNaeq(%s) returned %d, instead of %d`, s, got, want)
-//  }
-// }
+// Check using https://www.naeq.io/
+func TestGetNaeqMatches(t *testing.T) {
+	s := "foo"
+	p := ""
+	got, _, err := GetMatches(s, p)
+	want := append(make([]interface{}, 0),
+		"3 8 a b",
+		"a b k 2",
+		"door",
+		"g m",
+		"go who",
+		"his",
+		"kaaba",
+		"laid",
+		"last",
+		"lords",
+		"loud",
+		"oil",
+		"shall call",
+		"well",
+		"what",
+	)
+	if err != nil {
+		t.Fatalf("GetMatches(%s %s)\nWanted: %v\nReceived: %v", s, p, want, err)
+	}
+	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
+		t.Fatalf("GetMatches(%s %s)\nWanted: %v\nReceived: %v", s, p, want, got)
+	}
+}
+
+// Check using https://www.naequery.com/
+func TestGetNaeqMatchesFooBarBazLiberI(t *testing.T) {
+	s := "foobarbaz"
+	p := "./books/liber-i.json"
+	got, _, err := GetMatches(s, p)
+	want := append(make([]interface{}, 0),
+		"destroy",
+		"doth the",
+		"for he is",
+		"burden",
+		"being a",
+		"and is not",
+		"the whole",
+		"here is",
+	)
+	if err != nil {
+		t.Fatalf(`GetMatches(%s %s)\nWanted: %v\nReceived: %v`, s, p, want, err)
+	}
+	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
+		t.Fatalf(`GetMatches(%s %s)\nWanted: %v\nReceived: %v`, s, p, want, got)
+	}
+}

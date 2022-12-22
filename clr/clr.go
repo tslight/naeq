@@ -29,3 +29,7 @@ func Printf(clr string, msg string, v ...interface{}) {
 	fmt.Printf(msg, v...)
 	fmt.Print(Off)
 }
+
+func Sprintf(clr string, msg string, v ...interface{}) string {
+	return fmt.Sprint(clr) + fmt.Sprintf(msg, v...) + fmt.Sprint(Off)
+}

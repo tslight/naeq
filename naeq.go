@@ -82,23 +82,23 @@ func GetBook(path string) map[string]interface{} {
 	return book
 }
 
-func GetMatches(s string, p string) ([]interface{}, error) {
+func GetMatches(s string, p string) ([]interface{}, string, error) {
+	stats := clr.Sprintf(clr.Yel, "Words:%s %s\n", clr.Grn, s)
+
 	value, err := GetNaeq(s)
 	if err != nil {
-		return nil, err
+		return nil, "", err
 	}
-
-	clr.Printf(clr.Yel, "NAEQ Sum:%s %d\n", clr.Grn, value)
+	stats += clr.Sprintf(clr.Yel, "NAEQ Sum:%s %d\n", clr.Grn, value)
 
 	book := GetBook(p)
-	clr.Printf(clr.Yel, "Book:%s %v\n", clr.Grn, book["name"])
+	stats += clr.Sprintf(clr.Yel, "Book:%s %v\n", clr.Grn, book["name"])
 
 	key := strconv.Itoa(value)
-
 	matches := reflect.ValueOf(book[key]).Interface().([]interface{})
-	clr.Printf(clr.Yel, "Matches: %s%d\n", clr.Grn, len(matches))
+	stats += clr.Sprintf(clr.Yel, "Matches: %s%d\n", clr.Grn, len(matches))
 
-	return matches, err
+	return matches, stats, err
 }
 
 func main() {
@@ -121,12 +121,12 @@ func main() {
 	if err := input.Err(); err != nil {
 		log.Fatalln(err)
 	}
-	clr.Printf(clr.Yel, "Words:%s %s\n", clr.Grn, words)
 
-	matches, err := GetMatches(words, path)
+	matches, stats, err := GetMatches(words, path)
 	if err != nil {
 		log.Fatalln(err)
 	}
+	fmt.Print(stats)
 
 	for k, v := range matches {
 		if count > 0 && k >= count {
