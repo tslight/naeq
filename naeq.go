@@ -137,7 +137,7 @@ func main() {
 	flag.BoolVar(&long, "L", false, "list embedded books with name")
 	flag.Parse()
 
-	if list {
+	if list || long {
 		bookNames, err := getAllFilenames(&books)
 		if err != nil {
 			log.Fatalln(err)
