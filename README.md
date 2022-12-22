@@ -27,7 +27,7 @@ Usage: naeq [options...] <words>:
         number of matches to show
   -p string
         path to alternative book
-  -r    display raw unformatted output
+  -s    only return naeq sum
 ```
 
 ## Gematria and Qabalah
