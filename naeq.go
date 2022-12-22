@@ -36,7 +36,7 @@ func GetInput(args []string) (*bufio.Scanner, error) {
 	return bufio.NewScanner(os.Stdin), nil
 }
 
-func sumNumbersInString(s string) (int, error) {
+func SumNumbersInString(s string) (int, error) {
 	value := 0
 	numericRegex := regexp.MustCompile(`\d+`)
 	matches := numericRegex.FindAllString(s, -1)
@@ -52,7 +52,7 @@ func sumNumbersInString(s string) (int, error) {
 
 func GetNaeq(s string) (int, error) {
 	// sum all numbers first
-	value, err := sumNumbersInString(s)
+	value, err := SumNumbersInString(s)
 	if err != nil {
 		return 0, err
 	}
