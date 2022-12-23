@@ -1,4 +1,4 @@
-# Secret Cipher of the UFOnauts CLI ![example event parameter](https://github.com/tslight/naeq/actions/workflows/go-build-and-test.yml/badge.svg?event=push)
+# Secret Cipher of the UFOnauts CLI ![CI Result](https://github.com/tslight/naeq/actions/workflows/go-build-and-test.yml/badge.svg?event=push) [![Go Report Card](https://goreportcard.com/badge/github.com/tslight/naeq)](https://goreportcard.com/report/github.com/tslight/naeq)
 
 Inspired from [Allen
 Greenfield's](https://en.wikipedia.org/wiki/Allen_H._Greenfield) bizarre &
