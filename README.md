@@ -19,7 +19,6 @@ go install github.com/tslight/naeq@latest
 
 ``` text
 Usage: naeq [options...] <words>:
-  -L    list embedded books with name
   -b string
         embedded book (default "liber-al")
   -l    list embedded books
