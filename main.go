@@ -4,10 +4,10 @@ import (
 	"embed"
 	"flag"
 	"fmt"
+	"github.com/tslight/naeq/pkg/alw"
 	"github.com/tslight/naeq/pkg/efs"
 	"github.com/tslight/naeq/pkg/input"
 	"github.com/tslight/naeq/pkg/json"
-	"github.com/tslight/naeq/pkg/naeq"
 	"log"
 	"os"
 )
@@ -40,7 +40,7 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	i, err := naeq.GetSum(words)
+	i, err := alw.GetSum(words)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -63,7 +63,7 @@ func main() {
 		}
 	}
 
-	matches := naeq.GetMatches(i, book)
+	matches := alw.GetMatches(i, book)
 
 	for k, v := range matches {
 		if count > 0 && k >= count {
