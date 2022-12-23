@@ -80,7 +80,7 @@ func TestGetMatches(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	b, err := json.FromPath("../../assets/liber-al.json")
+	b, err := json.FromPath("../../assets/books/liber-al.json")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -114,7 +114,7 @@ func TestGetMatchesFooBarBazLiberI(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	b, err := json.FromPath("../../assets/liber-i.json")
+	b, err := json.FromPath("../../assets/books/liber-i.json")
 	if err != nil {
 		t.Fatal(err)
 	}

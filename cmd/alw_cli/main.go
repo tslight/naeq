@@ -1,9 +1,9 @@
 package main
 
 import (
-	"embed"
 	"flag"
 	"fmt"
+	"github.com/tslight/naeq/assets/books"
 	"github.com/tslight/naeq/pkg/alw"
 	"github.com/tslight/naeq/pkg/efs"
 	"github.com/tslight/naeq/pkg/input"
@@ -11,9 +11,6 @@ import (
 	"log"
 	"os"
 )
-
-//go:embed assets/*.json
-var books embed.FS
 
 func main() {
 	var count int
@@ -31,7 +28,7 @@ func main() {
 	flag.Parse()
 
 	if list {
-		bookNames, err := efs.GetBaseNamesSansExt(&books)
+		bookNames, err := efs.GetBaseNamesSansExt(&books.EFS)
 		if err != nil {
 			log.Fatalln(err)
 		}
@@ -63,7 +60,7 @@ func main() {
 			log.Fatalln(err)
 		}
 	} else {
-		book, err = json.FromEFSPath(books, fmt.Sprint("assets/", efsBook, ".json"))
+		book, err = json.FromEFSPath(books.EFS, fmt.Sprint(efsBook, ".json"))
 		if err != nil {
 			log.Fatalln(err)
 		}
