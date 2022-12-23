@@ -31,7 +31,13 @@ func main() {
 	flag.Parse()
 
 	if list {
-		fmt.Print(efs.GetBaseNamesSansExt(&books))
+		bookNames, err := efs.GetBaseNamesSansExt(&books)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		for _, v := range bookNames {
+			fmt.Println(v)
+		}
 		return
 	}
 
