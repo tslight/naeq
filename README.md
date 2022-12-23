@@ -7,7 +7,7 @@ fascinating
 [book](https://www.amazon.co.uk/Complete-SECRET-CIPHER-UfOnauts/dp/171864535X)
 & it's usage in the equally bizarre & fascinating
 [Hellier](https://www.hellier.tv/) TV show, taking cues from
-[this](https://www.naeq.io/) & [this](http://www.naequery.com/) web based
+[Wren Collier's](https://www.naeq.io/) & [Chad Milburn's](http://www.naequery.com/) web based
 versions.
 
 ## Installation
