@@ -3,18 +3,19 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/tslight/naeq/assets/books"
+	"github.com/tslight/naeq/pkg/alw"
+	"github.com/tslight/naeq/pkg/efs"
+	j "github.com/tslight/naeq/pkg/json"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
 
-type Article struct {
-	Title   string `json:"Title"`
-	Desc    string `json:"desc"`
-	Content string `json:"content"`
+type Query struct {
+	Book  string `json:"book"`
+	Words string `json:"words"`
 }
-
-var Articles []Article
 
 func logRequest(r *http.Request) {
 	ip := r.Header.Get("Client-Ip")
@@ -22,10 +23,6 @@ func logRequest(r *http.Request) {
 	log.Printf(
 		"%s from %s on %s requested %s\n", r.Method, ip, agent, r.URL.Path,
 	)
-}
-
-func articles(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(Articles)
 }
 
 func main() {
@@ -37,11 +34,29 @@ func main() {
 		}
 		switch r.Method {
 		case http.MethodGet:
-			fmt.Fprintf(w, "Do what thou wilt!\n")
+			bookNames, err := efs.GetBaseNamesSansExt(&books.EFS)
+			if err != nil {
+				log.Println(err)
+			}
+			fmt.Fprintf(w, "Do what thou wilt!\n%v", bookNames)
 		case http.MethodPost:
-			reqBody, _ := ioutil.ReadAll(r.Body)
-			fmt.Fprintf(w, "%+v", string(reqBody))
+			reqBody, err := ioutil.ReadAll(r.Body)
+			if err != nil {
+				log.Println(err)
+			}
 			log.Print(string(reqBody))
+			var query Query
+			json.Unmarshal(reqBody, &query)
+			i, err := alw.GetSum(query.Words)
+			if err != nil {
+				log.Println(err)
+			}
+			book, err := j.FromEFSPath(books.EFS, query.Book)
+			if err != nil {
+				log.Println(err)
+			}
+			matches := alw.GetMatches(i, book)
+			json.NewEncoder(w).Encode(matches)
 		case http.MethodPut:
 			// Update an existing record.
 		case http.MethodDelete:
