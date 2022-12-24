@@ -23,10 +23,11 @@ type Query struct {
 }
 
 func logRequest(r *http.Request) {
-	ip := r.Header.Get("Client-Ip")
+	ip := r.RemoteAddr
+	// ip := r.Header.Get("Client-Ip")
 	agent := r.Header.Get("User-Agent")
 	log.Printf(
-		"%s from %s on %s requested %s\n", r.Method, ip, agent, r.URL.Path,
+		"%s to %s from %s at %s\n", r.Method, r.URL.Path, agent, ip,
 	)
 }
 
@@ -78,9 +79,9 @@ func main() {
 				json.NewEncoder(w).Encode(err)
 				break
 			}
-			log.Println(query)
+			log.Printf("%#v", query)
 			matches := alw.GetMatches(i, book)
-			log.Println(matches)
+			log.Printf("%#v", matches)
 			json.NewEncoder(w).Encode(matches)
 		case http.MethodPut:
 			// Update an existing record.
