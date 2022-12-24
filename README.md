@@ -1,5 +1,5 @@
  ![CI Result](https://github.com/tslight/naeq/actions/workflows/go-build-and-test.yml/badge.svg?event=push) [![Go Report Card](https://goreportcard.com/badge/github.com/tslight/naeq)](https://goreportcard.com/report/github.com/tslight/naeq) [![Go Reference](https://pkg.go.dev/badge/github.com/tslight/naeq.svg)](https://pkg.go.dev/github.com/tslight/naeq)
-# Secret Cipher of the UFOnauts CLI
+# English Qabalah CLI & REST API
 
 Inspired from [Allen
 Greenfield's](https://en.wikipedia.org/wiki/Allen_H._Greenfield) bizarre &
@@ -16,7 +16,11 @@ versions.
 go install github.com/tslight/naeq@latest
 ```
 
-## Usage
+## CLI Usage
+
+``` shell
+alw_cli -b liber-al -n 31 hellier
+```
 
 ``` text
 Usage: naeq [options...] <words>:
@@ -28,6 +32,13 @@ Usage: naeq [options...] <words>:
   -p string
         path to alternative book
   -s    only return naeq sum
+```
+
+## API Usage
+
+``` shell
+alw_api &
+curl -s 127.0.0.1:10000 -d '{"book": "liber-al.json", "words": "hellier"}'
 ```
 
 ## Gematria and Qabalah
