@@ -7,7 +7,7 @@ fascinating
 [book](https://www.amazon.co.uk/Complete-SECRET-CIPHER-UfOnauts/dp/171864535X)
 & it's usage in the equally bizarre & fascinating
 [Hellier](https://www.hellier.tv/) TV show, taking cues from
-[Wren Collier's](https://www.naeq.io/) & [Chad Milburn's](http://www.naequery.com/) web based
+[Wren Collier](https://www.naeq.io/) & [Chad Milburn's](http://www.naequery.com/) web based
 versions.
 
 ## Installation
@@ -18,9 +18,20 @@ go install github.com/tslight/naeq@latest
 
 ## CLI Usage
 
+Running `alw_cli` with no arguments will prompt for words and use Liber Al
+Vegis (The Book of the Law) by default, and will display all the results.
+
+If you want to choose another book and limit the number of results use the `-b`
+and `-n` flags respectively. For example:
+
 ``` shell
-alw_cli -b liber-al -n 31 hellier
+alw_cli -b liber-i -n 31 hellier
 ```
+
+To list the baked in books run `alw_cli -l` and to give the tool your own book
+in json format use the `-p` flag. If you just want to calculate the NAEQ/ALW
+cipher sum of a given string (without finding matches in a mystical text) use
+the `-s` flag.
 
 ``` text
 Usage: naeq [options...] <words>:
@@ -36,12 +47,21 @@ Usage: naeq [options...] <words>:
 
 ## API Usage
 
+This is very much W.I.P. and my first time writing an API from scratch so bare
+with me...
+
 ``` shell
 alw_api &
 curl -s 127.0.0.1:10000 -d '{"book": "liber-al.json", "words": "hellier"}'
 ```
 
-## Gematria and Qabalah
+## Context/Background
+
+The sections below were ripped directly from [here](https://www.naeq.io/about),
+so full credit/attribution to [Wren Collier](https://liminalroom.com/) & Alynne
+Keith.
+
+### Gematria and Qabalah
 
 Hermetic Qabalah is a derivative of a school of Jewish mysticism called
 Kabbalah that was developed by modern Western esotericists as a way to explore
@@ -53,7 +73,7 @@ phrase. Words and phrases that have the same numeric value are thought to have
 similar properties and can be used to meditate on hidden meanings or
 relationships contained within those similarities.
 
-## The Book of The Law
+### The Book of The Law
 
 The Book of the Law — or Liber AL vel Legis — is the central holy text of
 Thelema, a spiritual and social philosophy derived from Western esotericism and
@@ -61,7 +81,7 @@ founded by magician Aleister Crowley. Liber AL vel Legis was dictated to
 Crowley over the course of three days in 1904 by a discarnate entity called
 Aiwass.
 
-## The New Aeon English Qabalah
+### The New Aeon English Qabalah
 
 Since Hebrew Gematria uses the Hebrew script to derive values, it does not
 neccessarily apply as well to English or Roman scripts and thus efforts have
@@ -87,14 +107,12 @@ cipher:
   F=18 Q=19 B=20 M=21 X=22 I=23 T=24 E=25 P=26
 ```
 
-Or:
-
 ``` text
   A=1 B=20 C=13 D=6 E=25 F=18 G=11 H=4 I=23 J=16 K=9 L=2 M=21 N=14 O=7 P=26 Q=19
   R=12 S=5 T=24 U=17 V=10 W=3 X=22 Y=15 Z=8
 ```
 
-## The Secret Cipher of the UFOnauts
+### The Secret Cipher of the UFOnauts
 
 Secret Cipher of the UFOnauts, a book published in 1994 and written by
 occultist and ufologist Allen H. Greenfield seeks to help elucidate the nature
@@ -115,7 +133,7 @@ words or phrases in Liber AL that had the same values, one could arrive at
 further insight, or obtain major revelations about the nature of these entities
 or their motivations.
 
-## How to Use this Tool
+### How to Use this Tool
 
 Type a word or phrase into the search bar. The ALW cipher value will
 automatically be calculated and a list of letters, words and phrases (of up to
