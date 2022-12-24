@@ -7,10 +7,15 @@ import (
 	"github.com/tslight/naeq/pkg/alw"
 	"github.com/tslight/naeq/pkg/efs"
 	j "github.com/tslight/naeq/pkg/json"
-	"io/ioutil"
 	"log"
 	"net/http"
 )
+
+type Error struct {
+	Code   int    `json:"code"`
+	Type   string `json:"domain"`
+	Reason string `json:"message"`
+}
 
 type Query struct {
 	Book  string `json:"book"`
@@ -23,6 +28,21 @@ func logRequest(r *http.Request) {
 	log.Printf(
 		"%s from %s on %s requested %s\n", r.Method, ip, agent, r.URL.Path,
 	)
+}
+
+func DecodeRequest(r *http.Request, i interface{}) *Error {
+	decoder := json.NewDecoder(r.Body)
+	defer r.Body.Close()
+	decoder.DisallowUnknownFields()
+	if err := decoder.Decode(&i); err != nil {
+		reason := fmt.Sprintf("Request JSON is invalid: %v", err)
+		return &Error{
+			Code:   400,
+			Type:   "Bad Request",
+			Reason: reason,
+		}
+	}
+	return nil
 }
 
 func main() {
@@ -40,20 +60,23 @@ func main() {
 			}
 			fmt.Fprintf(w, "Do what thou wilt!\n%v", bookNames)
 		case http.MethodPost:
-			reqBody, err := ioutil.ReadAll(r.Body)
-			if err != nil {
-				log.Println(err)
-			}
-			log.Print(string(reqBody))
 			var query Query
-			json.Unmarshal(reqBody, &query)
+			if err := DecodeRequest(r, &query); err != nil {
+				log.Println(err)
+				json.NewEncoder(w).Encode(err)
+				break
+			}
 			i, err := alw.GetSum(query.Words)
 			if err != nil {
 				log.Println(err)
+				json.NewEncoder(w).Encode(err)
+				break
 			}
 			book, err := j.FromEFSPath(books.EFS, query.Book)
 			if err != nil {
 				log.Println(err)
+				json.NewEncoder(w).Encode(err)
+				break
 			}
 			matches := alw.GetMatches(i, book)
 			json.NewEncoder(w).Encode(matches)
