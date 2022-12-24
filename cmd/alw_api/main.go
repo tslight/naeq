@@ -35,7 +35,7 @@ func DecodeRequest(r *http.Request, i interface{}) *Error {
 	defer r.Body.Close()
 	decoder.DisallowUnknownFields()
 	if err := decoder.Decode(&i); err != nil {
-		reason := fmt.Sprintf("Request JSON is invalid: %v", err)
+		reason := fmt.Sprintf("Invalid JSON: %v", err)
 		return &Error{
 			Code:   400,
 			Type:   "Bad Request",
@@ -78,7 +78,9 @@ func main() {
 				json.NewEncoder(w).Encode(err)
 				break
 			}
+			log.Println(query)
 			matches := alw.GetMatches(i, book)
+			log.Println(matches)
 			json.NewEncoder(w).Encode(matches)
 		case http.MethodPut:
 			// Update an existing record.
