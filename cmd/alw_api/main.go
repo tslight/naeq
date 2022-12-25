@@ -24,6 +24,13 @@ type Query struct {
 	Words string `json:"words"`
 }
 
+type Response struct {
+	Book       interface{}   `json:"book"`
+	Sum        int           `json:"sum"`
+	MatchCount int           `json:"match_count"`
+	Matches    []interface{} `json:matches`
+}
+
 func logRequest(r *http.Request) {
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -96,8 +103,14 @@ func main() {
 			log.Printf("%s = %s", query.Book, book["name"])
 			// log.Printf("%#v", query)
 			matches := alw.GetMatches(i, book)
-			// log.Printf("%#v", matches)
-			json.NewEncoder(w).Encode(matches)
+			response := Response{
+				Book:       book["name"],
+				Sum:        i,
+				MatchCount: len(matches),
+				Matches:    matches,
+			}
+			// log.Printf("%#v", response)
+			json.NewEncoder(w).Encode(response)
 			log.Printf("Successfully returned %d matches! :-)", len(matches))
 		case http.MethodPut:
 			// Update an existing record.
