@@ -112,10 +112,6 @@ func main() {
 			// log.Printf("%#v", response)
 			json.NewEncoder(w).Encode(response)
 			log.Printf("Successfully returned %d matches! :-)", len(matches))
-		case http.MethodPut:
-			// Update an existing record.
-		case http.MethodDelete:
-			// Remove the record.
 		default:
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
