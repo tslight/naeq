@@ -56,7 +56,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
-		fmt.Fprintf(w, "Do what thou wilt!\n%v", bookNames)
+		json.NewEncoder(w).Encode(bookNames)
 	case http.MethodPost:
 		var query Query
 		decoder := json.NewDecoder(r.Body)
