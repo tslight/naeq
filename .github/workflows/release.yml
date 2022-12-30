@@ -2,11 +2,11 @@ on:
   push:
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+'
-  workflow_run:
-    workflows: ["Build"]
-    branches: [main]
-    types:
-      - completed
+  # workflow_run:
+  #   workflows: ["Build"]
+  #   branches: [main]
+  #   types:
+  #     - completed
 
 name: Release
 
