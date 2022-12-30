@@ -1,4 +1,3 @@
-ARCH ?= amd64
 FLAGS = '-ldflags=-s -w'
 VERSION = $(shell git describe --tags --abbrev=0)
 
@@ -11,7 +10,11 @@ $(ARCHITECTURES):
 	@TYPE=api ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
 	@TYPE=cli ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
 
-all: $(ARCHITECTURES)
+TYPES = api cli
+$(TYPES):
+	@TYPE=$(@) $(MAKE) $(ARCHITECTURES)
+
+all: $(TYPES)
 
 clean:
 	@rm -fv ./alw-*-*-*
