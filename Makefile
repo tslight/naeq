@@ -1,3 +1,6 @@
+# Not used here, but this is fascinating:
+# https://stackoverflow.com/a/12110773/11133327
+
 FLAGS = '-ldflags=-s -w'
 VERSION = $(shell git describe --tags --abbrev=0)
 
