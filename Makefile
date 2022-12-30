@@ -6,14 +6,14 @@ VERSION = $(shell git describe --tags --abbrev=0)
 
 OPERATING_SYSTEMS = darwin linux windows freebsd openbsd
 $(OPERATING_SYSTEMS):
-	GOARCH=$(ARCH) GOOS=$(@) go build $(FLAGS) -o ./alw-$(TYPE)-$(@)-$(ARCH) ./cmd/alw_$(TYPE)
+	GOARCH=$(ARCH) GOOS=$(@) go build $(FLAGS) -o ./$(CMD)-$(@)-$(ARCH) ./cmd/$(CMD)
 
 ARCHITECTURES = amd64 arm64
-$(ARCHITECTURES): ; @TYPE=$(TYPE) ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
+$(ARCHITECTURES): ; @CMD=$(CMD) ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
 
-TYPES = api cli
-$(TYPES): ; @TYPE=$(@) $(MAKE) -j $(ARCHITECTURES)
+CMDS = alw-api alw-cli
+$(CMDS): ; @CMD=$(@) $(MAKE) -j $(ARCHITECTURES)
 
-all: $(TYPES)
+all: $(CMDS)
 
 clean: ; @rm -fv ./alw-*-*-*
