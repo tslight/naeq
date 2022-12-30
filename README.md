@@ -16,6 +16,14 @@ versions.
 go install github.com/tslight/naeq@latest
 ```
 
+Or download a pre-compiled binary from the
+[releases](https://github.com/tslight/naeq/releases) page.
+
+#### N.B.
+
+The binaries are fairly large because of the embedding of all the files in
+`assets/books/*.json` into them.
+
 ## CLI Usage
 
 Running `alw_cli` with no arguments will prompt for words and use Liber Al
