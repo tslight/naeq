@@ -9,7 +9,6 @@ import (
 	"github.com/tslight/naeq/pkg/input"
 	"github.com/tslight/naeq/pkg/json"
 	"log"
-	"os"
 )
 
 var (
@@ -23,17 +22,11 @@ var (
 
 var Version = "unknown"
 
-func usage() {
-	fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words>:\n", os.Args[0])
-	flag.PrintDefaults()
-}
-
 func main() {
-	flag.Usage = usage
 	flag.Parse()
 
 	if *version {
-		fmt.Printf("%s %s\n", os.Args[0], Version)
+		fmt.Println(Version)
 		return
 	}
 

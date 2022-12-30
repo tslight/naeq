@@ -114,7 +114,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	flag.Parse()
 	if *version {
-		fmt.Printf("%s\n", Version)
+		fmt.Println(Version)
 		return
 	}
 	log.Printf("Synchronicity engines started...")
