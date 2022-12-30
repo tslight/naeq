@@ -1,7 +1,7 @@
 FLAGS = '-ldflags=-s -w'
 VERSION = $(shell git describe --tags --abbrev=0)
 
-OPERATING_SYSTEMS = darwin linux windows
+OPERATING_SYSTEMS = darwin linux windows freebsd openbsd
 $(OPERATING_SYSTEMS):
 	GOARCH=$(ARCH) GOOS=$(@) go build $(FLAGS) -o ./alw-$(TYPE)-$(@)-$(ARCH) ./cmd/alw_$(TYPE)
 
