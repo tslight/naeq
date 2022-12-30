@@ -56,7 +56,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
-		json.NewEncoder(w).Encode(bookNames)
+		err = json.NewEncoder(w).Encode(bookNames)
+		if err != nil {
+			log.Println(err)
+		}
 	case http.MethodPost:
 		var query Query
 		decoder := json.NewDecoder(r.Body)
@@ -100,7 +103,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			Matches:    matches,
 		}
 		// log.Printf("%#v", response)
-		json.NewEncoder(w).Encode(response)
+		err = json.NewEncoder(w).Encode(response)
+		if err != nil {
+			log.Println(err)
+		}
 		log.Printf("Successfully returned %d matches! :-)", len(matches))
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)

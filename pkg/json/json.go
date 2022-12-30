@@ -25,7 +25,10 @@ func FromEFSPath(fs embed.FS, path string) (map[string]interface{}, error) {
 	}
 
 	var result map[string]interface{}
-	json.Unmarshal([]byte(byteValue), &result)
+	err = json.Unmarshal([]byte(byteValue), &result)
+	if err != nil {
+		return nil, err
+	}
 
 	return result, nil
 }
@@ -48,7 +51,10 @@ func FromPath(path string) (map[string]interface{}, error) {
 	}
 
 	var result map[string]interface{}
-	json.Unmarshal([]byte(byteValue), &result)
+	err = json.Unmarshal([]byte(byteValue), &result)
+	if err != nil {
+		return nil, err
+	}
 
 	return result, nil
 }

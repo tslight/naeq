@@ -54,7 +54,10 @@ func TestValidPostRequest(t *testing.T) {
 		t.Fatal(err)
 	}
 	receivedBody := Response{}
-	json.Unmarshal(b, &receivedBody)
+	err = json.Unmarshal(b, &receivedBody)
+	if err != nil {
+		t.Fatal(err)
+	}
 	if fmt.Sprintf("%#v", expectedBody) != fmt.Sprintf("%#v", receivedBody) {
 		t.Fatalf("expected a %#v, instead got: %#v", expectedBody, receivedBody)
 	}
