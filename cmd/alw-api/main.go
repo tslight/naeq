@@ -12,7 +12,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
 )
 
 var (
@@ -115,10 +114,9 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	flag.Parse()
 	if *version {
-		fmt.Printf("%s %s\n", os.Args[0], Version)
+		fmt.Printf("%s\n", Version)
 		return
 	}
-
 	log.Printf("Synchronicity engines started...")
 	http.HandleFunc("/", Handler)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
