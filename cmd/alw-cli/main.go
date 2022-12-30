@@ -21,6 +21,8 @@ var (
 	version = flag.Bool("v", false, "print version info")
 )
 
+var Version = "unknown"
+
 func usage() {
 	fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words>:\n", os.Args[0])
 	flag.PrintDefaults()
@@ -29,6 +31,11 @@ func usage() {
 func main() {
 	flag.Usage = usage
 	flag.Parse()
+
+	if *version {
+		fmt.Printf("%s %s\n", os.Args[0], Version)
+		return
+	}
 
 	if *list {
 		bookNames, err := efs.GetBaseNamesSansExt(&books.EFS)

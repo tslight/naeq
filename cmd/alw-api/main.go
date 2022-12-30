@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"github.com/tslight/naeq/assets/books"
 	"github.com/tslight/naeq/pkg/alw"
@@ -11,7 +12,20 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 )
+
+var (
+	port    = flag.Int("p", 8080, "Port to listen on")
+	version = flag.Bool("v", false, "print version info")
+)
+
+var Version = "unknown"
+
+func usage() {
+	fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words>:\n", os.Args[0])
+	flag.PrintDefaults()
+}
 
 type Query struct {
 	Book  string `json:"book"`
@@ -114,7 +128,14 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	flag.Usage = usage
+	flag.Parse()
+	if *version {
+		fmt.Printf("%s %s\n", os.Args[0], Version)
+		return
+	}
+
 	log.Printf("Synchronicity engines started...")
 	http.HandleFunc("/", Handler)
-	log.Fatal(http.ListenAndServe(":10000", nil))
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
 }
