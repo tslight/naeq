@@ -22,7 +22,7 @@ type Response struct {
 	Book       interface{}   `json:"book"`
 	Sum        int           `json:"sum"`
 	MatchCount int           `json:"match_count"`
-	Matches    []interface{} `json:matches`
+	Matches    []interface{} `json:"matches"`
 }
 
 func logRequest(r *http.Request) {
