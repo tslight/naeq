@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Build
+      run: make all
     # https://github.com/actions/upload-release-asset/issues/28#issuecomment-617208601
     # https://github.com/github/hub
     - name: Release
       run: |
-        make all
         assets=()
         for asset in ./alw-*-*-*; do
           assets+=("-a" "$asset")
@@ -23,3 +24,5 @@ jobs:
         hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Clean
+      run: make clean
