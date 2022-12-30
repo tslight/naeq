@@ -22,11 +22,6 @@ var (
 
 var Version = "unknown"
 
-func usage() {
-	fmt.Fprintf(os.Stderr, "Usage: %s [options...] <words>:\n", os.Args[0])
-	flag.PrintDefaults()
-}
-
 type Query struct {
 	Book  string `json:"book"`
 	Words string `json:"words"`
@@ -128,7 +123,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	flag.Usage = usage
 	flag.Parse()
 	if *version {
 		fmt.Printf("%s %s\n", os.Args[0], Version)

@@ -27,17 +27,17 @@ The binaries are fairly large because of the embedding of all the files in
 
 ## CLI Usage
 
-Running `alw_cli` with no arguments will prompt for words and use Liber Al
+Running `alw-cli` with no arguments will prompt for words and use Liber Al
 Vegis (The Book of the Law) by default, and will display all the results.
 
 If you want to choose another book and limit the number of results use the `-b`
 and `-n` flags respectively. For example:
 
 ``` shell
-alw_cli -b liber-i -n 31 hellier
+alw-cli -b liber-i -n 31 hellier
 ```
 
-To list the baked in books run `alw_cli -l` and to give the tool your own book
+To list the baked in books run `alw-cli -l` and to give the tool your own book
 in json format use the `-p` flag. If you just want to calculate the NAEQ/ALW
 cipher sum of a given string (without finding matches in a mystical text) use
 the `-s` flag.
@@ -59,9 +59,18 @@ Usage: naeq [options...] <words>:
 This is very much W.I.P. and my first time writing an API from scratch so bare
 with me...
 
+``` text
+Usage: alw-api [options...]:
+  -p int
+        Port to listen on (default 8080)
+  -v    print version info
+```
+
+#### Example
+
 ``` shell
-alw_api &
-curl -s 127.0.0.1:10000 -d '{"book": "liber-al.json", "words": "hellier"}'
+alw-api &
+curl -s 127.0.0.1:8080 -d '{"book": "liber-al.json", "words": "hellier"}'
 ```
 
 ## Context/Background
