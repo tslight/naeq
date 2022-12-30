@@ -6,14 +6,11 @@ $(OPERATING_SYSTEMS):
 	GOARCH=$(ARCH) GOOS=$(@) go build $(FLAGS) -o ./alw-$(TYPE)-$(@)-$(ARCH) ./cmd/alw_$(TYPE)
 
 ARCHITECTURES = amd64 arm64
-$(ARCHITECTURES):
-	@TYPE=$(TYPE) ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
+$(ARCHITECTURES): ; @TYPE=$(TYPE) ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
 
 TYPES = api cli
-$(TYPES):
-	@TYPE=$(@) $(MAKE) $(ARCHITECTURES)
+$(TYPES): ; @TYPE=$(@) $(MAKE) -j $(ARCHITECTURES)
 
 all: $(TYPES)
 
-clean:
-	@rm -fv ./alw-*-*-*
+clean: ; @rm -fv ./alw-*-*-*
