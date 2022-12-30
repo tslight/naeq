@@ -84,26 +84,17 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		i, err := alw.GetSum(query.Words)
 		if err != nil {
 			log.Println(err)
-			http.Error(
-				w,
-				fmt.Sprintf("Internal Server Error: %v", err.Error()),
-				http.StatusInternalServerError,
-			)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		log.Printf("NAEQ Sum: %d", i)
 		book, err := j.FromEFSPath(books.EFS, query.Book)
 		if err != nil {
 			log.Println(err)
-			http.Error(
-				w,
-				fmt.Sprintf("Internal Server Error: %v", err.Error()),
-				http.StatusInternalServerError,
-			)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		log.Printf("%s = %s", query.Book, book["name"])
-		// log.Printf("%#v", query)
 		matches := alw.GetMatches(i, book)
 		response := Response{
 			Book:       book["name"],
@@ -111,7 +102,6 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			MatchCount: len(matches),
 			Matches:    matches,
 		}
-		// log.Printf("%#v", response)
 		err = json.NewEncoder(w).Encode(response)
 		if err != nil {
 			log.Println(err)

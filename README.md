@@ -43,7 +43,7 @@ cipher sum of a given string (without finding matches in a mystical text) use
 the `-s` flag.
 
 ``` text
-Usage: naeq [options...] <words>:
+Usage: alw-cli [options...] <words>:
   -b string
         embedded book (default "liber-al")
   -l    list embedded books
