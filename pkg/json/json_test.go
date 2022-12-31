@@ -43,7 +43,7 @@ func TestFromInvalidPath(t *testing.T) {
 	path := "not/a/real/path"
 	_, err := FromPath(path)
 	if runtime.GOOS == "windows" {
-		want = fmt.Errorf("open %s: The system cannot find the path specified", path)
+		want = fmt.Errorf("open %s: The system cannot find the path specified.", path)
 	} else {
 		want = fmt.Errorf("open %s: no such file or directory", path)
 	}
