@@ -1,4 +1,3 @@
-// test deployment
 package main
 
 import (

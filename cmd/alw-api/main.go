@@ -8,6 +8,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/tslight/naeq/assets/books"
 	"github.com/tslight/naeq/pkg/alw"
@@ -164,5 +165,10 @@ func main() {
 	}
 	log.Println("Synchronicity engines starting...")
 	http.HandleFunc("/", Handler)
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
+	envPort, envPortPresent := os.LookupEnv("PORT")
+	if envPortPresent {
+		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", envPort), nil))
+	} else {
+		log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
+	}
 }
