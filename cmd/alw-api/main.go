@@ -153,7 +153,7 @@ func main() {
 		fmt.Println(Version)
 		return
 	}
-	log.Printf("Synchronicity engines started...")
+	log.Println("Synchronicity engines starting...")
 	http.HandleFunc("/", Handler)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
 }
