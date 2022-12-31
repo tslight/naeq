@@ -2,7 +2,7 @@ package json
 
 import (
 	"fmt"
-	"path/filepath"
+	"runtime"
 	"testing"
 )
 
@@ -39,9 +39,14 @@ func TestFromPath(t *testing.T) {
 }
 
 func TestFromInvalidPath(t *testing.T) {
-	path := filepath.Join("not", "a", "real", "path")
+	var want error
+	path := "not/a/real/path"
 	_, err := FromPath(path)
-	want := fmt.Errorf("open %s: no such file or directory", path)
+	if runtime.GOOS == "windows" {
+		want = fmt.Errorf("open %s: The system cannot find the path specified", path)
+	} else {
+		want = fmt.Errorf("open %s: no such file or directory", path)
+	}
 	if err.Error() != want.Error() {
 		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, path, err, want)
 	}
