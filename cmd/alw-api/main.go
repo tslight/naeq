@@ -19,6 +19,11 @@ DO WHAT THOU WILT!
 The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
 
 https://github.com/tslight/naeq
+
+curl -X GET ${HOST}:${PORT}?words=hellier
+curl -X GET ${HOST}:${PORT}?words=hellier&book=liber-i.json
+curl -X POST ${HOST}:${PORT} -d '{"words": "hellier"}'
+curl -X POST ${HOST}:${PORT} -d '{"book": "liber-x.json", "words": "hellier"}'
 `
 
 var (

@@ -1,6 +1,8 @@
  ![CI Result](https://github.com/tslight/naeq/actions/workflows/build.yml/badge.svg?event=push) [![Go Report Card](https://goreportcard.com/badge/github.com/tslight/naeq)](https://goreportcard.com/report/github.com/tslight/naeq) [![Go Reference](https://pkg.go.dev/badge/github.com/tslight/naeq.svg)](https://pkg.go.dev/github.com/tslight/naeq)
 # English Qabalah CLI & REST API
 
+*The Secret Cipher of the UFOnauts as an API & CLI, because* ¯\_(ツ)_/¯
+
 Inspired from [Allen
 Greenfield's](https://en.wikipedia.org/wiki/Allen_H._Greenfield) bizarre &
 fascinating
@@ -20,7 +22,7 @@ Or download a suitable pre-compiled binary for your architecture and operating
 system from the [releases](https://github.com/tslight/naeq/releases) page and
 move it to somewhere in your `$PATH`.
 
-#### N.B.
+**N.B.**
 
 The binaries are fairly large because of the embedding of all the files in
 `assets/books/*.json` into them.
@@ -66,11 +68,16 @@ Usage: alw-api [options...]:
   -v    print version info
 ```
 
-#### Example
+**Examples**
 
 ``` shell
-alw-api &
-curl -s 127.0.0.1:8080 -d '{"book": "liber-al.json", "words": "hellier"}'
+HOST="127.0.0.1"
+PORT="80"
+alw-api -p "${PORT}" &
+curl -X GET ${HOST}:${PORT}?words=hellier
+curl -X GET ${HOST}:${PORT}?words=hellier&book=liber-i.json
+curl -X POST ${HOST}:${PORT} -d '{"words": "hellier"}'
+curl -X POST ${HOST}:${PORT} -d '{"book": "liber-x.json", "words": "hellier"}'
 ```
 
 ## Context/Background
