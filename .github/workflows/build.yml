@@ -21,4 +21,5 @@ jobs:
       - name: Test
         run: |
           go test -v ./... -covermode=count -coverprofile=coverage.out
-          go tool cover -func=coverage.out
+          # TODO: figure out why this doesn't work on Windows
+          # go tool cover -func=coverage.out
