@@ -68,16 +68,14 @@ Usage: alw-api [options...]:
   -v    print version info
 ```
 
-**Examples**
+I have an instance deployed [here](https://naeq.onrender.com) if you'd like to
+try it out:
 
 ``` shell
-HOST="127.0.0.1"
-PORT="80"
-alw-api -p "${PORT}" &
-curl -X GET ${HOST}:${PORT}?words=hellier
-curl -X GET ${HOST}:${PORT}?words=hellier&book=liber-i.json
-curl -X POST ${HOST}:${PORT} -d '{"words": "hellier"}'
-curl -X POST ${HOST}:${PORT} -d '{"book": "liber-x.json", "words": "hellier"}'
+curl -X GET https://naeq.onrender.com?words=hellier
+curl -X GET https://naeq.onrender.com?words=hellier&book=liber-i.json
+curl -X POST https://naeq.onrender.com -d '{"words": "hellier"}'
+curl -X POST https://naeq.onrender.com -d '{"book": "liber-x.json", "words": "hellier"}'
 ```
 
 ## Context/Background
