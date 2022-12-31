@@ -2,6 +2,7 @@ package json
 
 import (
 	"fmt"
+	"path/filepath"
 	"testing"
 )
 
@@ -38,7 +39,7 @@ func TestFromPath(t *testing.T) {
 }
 
 func TestFromInvalidPath(t *testing.T) {
-	path := "./not/a/real/path"
+	path := filepath.Join("not", "a", "real", "path")
 	_, err := FromPath(path)
 	want := fmt.Errorf("open %s: no such file or directory", path)
 	if err.Error() != want.Error() {
