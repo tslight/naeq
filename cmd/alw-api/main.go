@@ -11,7 +11,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"strings"
 )
 
 var about = `
@@ -28,6 +27,8 @@ var (
 )
 
 var Version = "unknown"
+
+const defaultBook = "liber-al.json"
 
 type Data struct {
 	Book  string `json:"book"`
@@ -54,6 +55,9 @@ func logRequest(r *http.Request) {
 	log.Printf(
 		"%s to %s from %s at %s\n", r.Method, r.URL.Path, agent, ip,
 	)
+	if r.URL.RawQuery != "" {
+		log.Printf("Query Params: %s", r.URL.RawQuery)
+	}
 	bstr := string(b)
 	if bstr != "" {
 		log.Println(bstr)
@@ -94,13 +98,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case http.MethodGet:
-		query := r.URL.Query()
-		if len(query["words"]) > 0 {
-			words := strings.Join(query["words"], " ")
-			if len(query["book"]) > 0 {
-				book = strings.Join(query["book"], " ")
-			} else {
-				book = "liber-al.json"
+		words := r.URL.Query().Get("words")
+		if words != "" {
+			book = r.URL.Query().Get("book")
+			if book == "" {
+				book = defaultBook
 			}
 			response, err = buildResponse(words, book)
 			if err != nil {
@@ -113,7 +115,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	case http.MethodPost:
-		var data Data
+		data := Data{Book: defaultBook}
 		decoder := json.NewDecoder(r.Body)
 		defer r.Body.Close()
 		decoder.DisallowUnknownFields()
