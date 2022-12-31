@@ -1,7 +1,7 @@
  ![CI Result](https://github.com/tslight/naeq/actions/workflows/build.yml/badge.svg?event=push) [![Go Report Card](https://goreportcard.com/badge/github.com/tslight/naeq)](https://goreportcard.com/report/github.com/tslight/naeq) [![Go Reference](https://pkg.go.dev/badge/github.com/tslight/naeq.svg)](https://pkg.go.dev/github.com/tslight/naeq)
 # English Qabalah CLI & REST API
 
-*The Secret Cipher of the UFOnauts as an API & CLI, because* ¯\_(ツ)_/¯
+*The Secret Cipher of the UFOnauts as an API & CLI, because* `¯\_(ツ)_/¯`
 
 Inspired from [Allen
 Greenfield's](https://en.wikipedia.org/wiki/Allen_H._Greenfield) bizarre &
