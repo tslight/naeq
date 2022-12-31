@@ -7,12 +7,20 @@ import (
 	"fmt"
 	"github.com/tslight/naeq/assets/books"
 	"github.com/tslight/naeq/pkg/alw"
-	"github.com/tslight/naeq/pkg/efs"
 	j "github.com/tslight/naeq/pkg/json"
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
+
+var about = `
+DO WHAT THOU WILT!
+
+The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
+
+https://github.com/tslight/naeq
+`
 
 var (
 	port    = flag.Int("p", 8080, "Port to listen on")
@@ -21,7 +29,7 @@ var (
 
 var Version = "unknown"
 
-type Query struct {
+type Data struct {
 	Book  string `json:"book"`
 	Words string `json:"words"`
 }
@@ -52,7 +60,33 @@ func logRequest(r *http.Request) {
 	}
 }
 
+func buildResponse(words string, book string) (interface{}, error) {
+	i, err := alw.GetSum(words)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("NAEQ Sum: %d", i)
+	b, err := j.FromEFSPath(books.EFS, book)
+	if err != nil {
+		return nil, err
+	}
+	log.Printf("%s = %s", book, b["name"])
+	matches := alw.GetMatches(i, b)
+	log.Printf("Successfully found %d matches! :-)", len(matches))
+	response := Response{
+		Book:       b["name"],
+		Sum:        i,
+		MatchCount: len(matches),
+		Matches:    matches,
+	}
+	return response, nil
+}
+
 func Handler(w http.ResponseWriter, r *http.Request) {
+	var response interface{}
+	var err error
+	var book string
+
 	logRequest(r)
 	if r.URL.Path != "/" {
 		http.NotFound(w, r)
@@ -60,54 +94,49 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 	}
 	switch r.Method {
 	case http.MethodGet:
-		bookNames, err := efs.GetBaseNamesSansExt(&books.EFS)
-		if err != nil {
-			log.Println(err)
-		}
-		err = json.NewEncoder(w).Encode(bookNames)
-		if err != nil {
-			log.Println(err)
+		query := r.URL.Query()
+		if len(query["words"]) > 0 {
+			words := strings.Join(query["words"], " ")
+			if len(query["book"]) > 0 {
+				book = strings.Join(query["book"], " ")
+			} else {
+				book = "liber-al.json"
+			}
+			response, err = buildResponse(words, book)
+			if err != nil {
+				log.Println(err)
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		} else {
+			fmt.Fprint(w, about)
+			return
 		}
 	case http.MethodPost:
-		var query Query
+		var data Data
 		decoder := json.NewDecoder(r.Body)
 		defer r.Body.Close()
 		decoder.DisallowUnknownFields()
-		if err := decoder.Decode(&query); err != nil {
+		if err := decoder.Decode(&data); err != nil {
 			log.Println(err)
 			http.Error(
 				w, fmt.Sprintf("Bad Request: %s", err.Error()), http.StatusBadRequest,
 			)
 			return
 		}
-		i, err := alw.GetSum(query.Words)
+		response, err = buildResponse(data.Words, data.Book)
 		if err != nil {
 			log.Println(err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		log.Printf("NAEQ Sum: %d", i)
-		book, err := j.FromEFSPath(books.EFS, query.Book)
-		if err != nil {
-			log.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		log.Printf("%s = %s", query.Book, book["name"])
-		matches := alw.GetMatches(i, book)
-		response := Response{
-			Book:       book["name"],
-			Sum:        i,
-			MatchCount: len(matches),
-			Matches:    matches,
-		}
-		err = json.NewEncoder(w).Encode(response)
-		if err != nil {
-			log.Println(err)
-		}
-		log.Printf("Successfully returned %d matches! :-)", len(matches))
 	default:
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Println(err)
 	}
 }
 
