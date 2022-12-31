@@ -70,7 +70,7 @@ Usage: alw-api [options...]:
 ```
 
 I have instances deployed [here](https://naeq.onrender.com) and
-[here](https://alw.up.railway.app/)if you'd like to try it out:
+[here](https://alw.up.railway.app/), if you'd like to try it out:
 
 ``` shell
 curl -X GET https://naeq.onrender.com?words=hellier
