@@ -1,7 +1,8 @@
-VERSION = $(shell git describe --tags --abbrev=0)
+.DEFAULT_GOAL := all
+VERSION := $(shell git describe --tags --abbrev=0)
 
 # https://www.forkingbytes.com/blog/dynamic-versioning-your-go-application/
-FLAGS = "-ldflags=-s -w -X main.Version=$(VERSION)"
+FLAGS := "-ldflags=-s -w -X main.Version=$(VERSION)"
 
 # Not used here, but this is fascinating:
 # https://stackoverflow.com/a/12110773/11133327
@@ -18,3 +19,7 @@ $(CMDS): ; @CMD=$(@) $(MAKE) -j $(ARCHITECTURES)
 all: $(CMDS)
 
 clean: ; @rm -fv ./alw-*-*-*
+
+build_and_run_api:
+	go build ./cmd/alw-api
+	./alw-api -p 80
