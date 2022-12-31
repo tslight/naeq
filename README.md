@@ -18,9 +18,10 @@ versions.
 go install github.com/tslight/naeq@latest
 ```
 
-Or download a suitable pre-compiled binary for your architecture and operating
-system from the [releases](https://github.com/tslight/naeq/releases) page and
-move it to somewhere in your `$PATH`.
+Alternatively, download a suitable pre-compiled binary for your architecture
+and operating system from the
+[releases](https://github.com/tslight/naeq/releases) page and move it to
+somewhere in your `$PATH`.
 
 **N.B.**
 
