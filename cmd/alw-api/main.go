@@ -5,26 +5,14 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/tslight/naeq/assets/books"
-	"github.com/tslight/naeq/pkg/alw"
-	j "github.com/tslight/naeq/pkg/json"
 	"io"
 	"log"
 	"net/http"
+
+	"github.com/tslight/naeq/assets/books"
+	"github.com/tslight/naeq/pkg/alw"
+	j "github.com/tslight/naeq/pkg/json"
 )
-
-var about = `
-DO WHAT THOU WILT!
-
-The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
-
-https://github.com/tslight/naeq
-
-curl -X GET ${HOST}:${PORT}?words=hellier
-curl -X GET ${HOST}:${PORT}?words=hellier&book=liber-i.json
-curl -X POST ${HOST}:${PORT} -d '{"words": "hellier"}'
-curl -X POST ${HOST}:${PORT} -d '{"book": "liber-x.json", "words": "hellier"}'
-`
 
 var (
 	port    = flag.Int("p", 8080, "Port to listen on")
@@ -67,6 +55,27 @@ func logRequest(r *http.Request) {
 	if bstr != "" {
 		log.Println(bstr)
 	}
+}
+
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	var scheme string
+	if r.TLS == nil {
+		scheme = "http"
+	} else {
+		scheme = "https"
+	}
+	fmt.Fprintf(w, `
+DO WHAT THOU WILT!
+
+The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
+
+https://github.com/tslight/naeq
+
+curl -X GET  %[1]s://%[2]s?words=hellier
+curl -X GET  %[1]s://%[2]s?words=hellier&book=liber-i.json
+curl -X POST %[1]s://%[2]s -d '{"words": "hellier"}'
+curl -X POST %[1]s://%[2]s -d '{"book": "liber-x.json", "words": "hellier"}'
+`, scheme, r.Host)
 }
 
 func buildResponse(words string, book string) (interface{}, error) {
@@ -116,7 +125,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		} else {
-			fmt.Fprint(w, about)
+			aboutHandler(w, r)
 			return
 		}
 	case http.MethodPost:
