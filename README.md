@@ -1,5 +1,5 @@
  ![CI Result](https://github.com/tslight/naeq/actions/workflows/build.yml/badge.svg?event=push) [![Go Report Card](https://goreportcard.com/badge/github.com/tslight/naeq)](https://goreportcard.com/report/github.com/tslight/naeq) [![Go Reference](https://pkg.go.dev/badge/github.com/tslight/naeq.svg)](https://pkg.go.dev/github.com/tslight/naeq)
-# English Qabalah CLI & REST API
+# English Qabalah API & CLI
 
 *The Secret Cipher of the UFOnauts as an API & CLI, because* `¯\_(ツ)_/¯`
 
@@ -7,10 +7,9 @@ Inspired by [Allen
 Greenfield's](https://en.wikipedia.org/wiki/Allen_H._Greenfield) bizarre &
 fascinating
 [book](https://www.amazon.co.uk/Complete-SECRET-CIPHER-UfOnauts/dp/171864535X)
-& it's usage in the equally bizarre & fascinating
-[Hellier](https://www.hellier.tv/) TV show. Taking cues from [Wren
-Collier](https://www.naeq.io/) & [Chad Milburn's](http://www.naequery.com/) web
-based versions.
+& it's usage in the [Hellier](https://www.hellier.tv/) TV show. Taking cues
+from [Wren Collier](https://www.naeq.io/) & [Chad
+Milburn's](http://www.naequery.com/) web based versions.
 
 ## Installation
 
@@ -23,10 +22,8 @@ and operating system from the
 [Releases](https://github.com/tslight/naeq/releases) page and move it to
 somewhere in your `$PATH`.
 
-**N.B.**
-
-The binaries are fairly large because of the embedding of all the files in
-`assets/books/*.json` into them.
+**N.B.** The binaries are fairly large because of the embedding of all the
+files in `assets/books/*.json` into them.
 
 ## CLI Usage
 
@@ -74,16 +71,16 @@ I have instances deployed [here](https://naeq.onrender.com) and
 
 ``` shell
 curl -X GET https://naeq.onrender.com?words=hellier
-curl -X GET https://naeq.onrender.com?words=hellier&book=liber-i.json
+curl -X GET https://naeq.onrender.com?words=hellier&book=liber-i
 curl -X POST https://naeq.onrender.com -d '{"words": "hellier"}'
-curl -X POST https://naeq.onrender.com -d '{"book": "liber-x.json", "words": "hellier"}'
+curl -X POST https://naeq.onrender.com -d '{"book": "liber-x", "words": "hellier"}'
 ```
 
 ``` shell
 curl -X GET https://alw.up.railway.app?words=hellier
-curl -X GET https://alw.up.railway.app?words=hellier&book=liber-i.json
+curl -X GET https://alw.up.railway.app?words=hellier&book=liber-i
 curl -X POST https://alw.up.railway.app -d '{"words": "hellier"}'
-curl -X POST https://alw.up.railway.app -d '{"book": "liber-x.json", "words": "hellier"}'
+curl -X POST https://alw.up.railway.app -d '{"book": "liber-x", "words": "hellier"}'
 ```
 
 ## Context/Background
