@@ -3,14 +3,14 @@
 
 *The Secret Cipher of the UFOnauts as an API & CLI, because* `¯\_(ツ)_/¯`
 
-Inspired from [Allen
+Inspired by [Allen
 Greenfield's](https://en.wikipedia.org/wiki/Allen_H._Greenfield) bizarre &
 fascinating
 [book](https://www.amazon.co.uk/Complete-SECRET-CIPHER-UfOnauts/dp/171864535X)
 & it's usage in the equally bizarre & fascinating
-[Hellier](https://www.hellier.tv/) TV show, taking cues from
-[Wren Collier](https://www.naeq.io/) & [Chad Milburn's](http://www.naequery.com/) web based
-versions.
+[Hellier](https://www.hellier.tv/) TV show. Taking cues from [Wren
+Collier](https://www.naeq.io/) & [Chad Milburn's](http://www.naequery.com/) web
+based versions.
 
 ## Installation
 
@@ -20,7 +20,7 @@ go install github.com/tslight/naeq@latest
 
 Alternatively, download a suitable pre-compiled binary for your architecture
 and operating system from the
-[releases](https://github.com/tslight/naeq/releases) page and move it to
+[Releases](https://github.com/tslight/naeq/releases) page and move it to
 somewhere in your `$PATH`.
 
 **N.B.**

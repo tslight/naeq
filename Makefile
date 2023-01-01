@@ -20,7 +20,7 @@ all: $(CMDS)
 
 clean: ; @rm -fv ./alw-*-*-*
 
-build_and_run_api:
+run:
 	go build ./cmd/alw-api
 	./alw-api -p 80
 
