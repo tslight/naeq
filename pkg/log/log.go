@@ -88,12 +88,13 @@ func Request(r *http.Request) {
 	if ip == "" {
 		ip = r.RemoteAddr
 	}
-	agent := r.Header.Get("User-Agent")
 	Info.Printf(
-		"%s to %s%s from %s at %s\n", r.Method, r.Host, r.URL.Path, agent, ip,
+		"%s to %s%s from %s\n", r.Method, r.Host, r.URL.Path, ip,
 	)
+	agent := r.Header.Get("User-Agent")
+	Info.Print("AGENT: ", agent)
 	if r.URL.RawQuery != "" {
-		Info.Printf("Query Params: %s", r.URL.RawQuery)
+		Info.Print("Query Params: ", r.URL.RawQuery)
 	}
 	bstr := string(b)
 	if bstr != "" {
