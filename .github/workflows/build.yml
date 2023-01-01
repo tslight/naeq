@@ -9,17 +9,17 @@ jobs:
         os: ["windows-latest", "ubuntu-latest", "macOS-latest"]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout
       - name: Setup
-        uses: actions/setup-go@v3
+        uses: actions/setup-go
       - name: Build
         run: go build -v ./...
       - name: Vet
         run: go vet -v ./...
       - name: Lint
-        uses: golangci/golangci-lint-action@v3
+        uses: golangci/golangci-lint-action
       - name: Static Check
-        uses: dominikh/staticcheck-action@v1.2.0
+        uses: dominikh/staticcheck-action
       - name: Test
         run: go test -v ./... -covermode=count -coverprofile=c.out
       - name: Coverage
