@@ -19,6 +19,6 @@ jobs:
       - name: Lint
         uses: golangci/golangci-lint-action@v3
       - name: Test
-        run: |
-          go test -v ./... -covermode=count -coverprofile=c.out
-          go tool cover -func=c.out
+        run: go test -v ./... -covermode=count -coverprofile=c.out
+      - name: Coverage
+        run: go tool cover -func=c.out
