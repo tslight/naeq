@@ -14,6 +14,14 @@ import (
 	"github.com/tslight/naeq/pkg/log"
 )
 
+var about = `
+DO WHAT THOU WILT!
+
+The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
+
+https://github.com/tslight/naeq
+`
+
 var (
 	port    = flag.Int("p", 8080, "Port to listen on")
 	version = flag.Bool("v", false, "print version info")
@@ -54,11 +62,9 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	fmt.Fprintf(w, `
-DO WHAT THOU WILT!
+%s
 
-The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
-
-https://github.com/tslight/naeq
+Examples:
 
 curl -X GET  %[1]s://%[2]s?words=hellier
 curl -X GET  %[1]s://%[2]s?words=hellier&book=liber-i
@@ -68,7 +74,7 @@ curl -X POST %[1]s://%[2]s -d '{"book": "liber-x", "words": "hellier"}'
 Available Books:
 
 %s
-`, scheme, r.Host, bookStr)
+`, about, scheme, r.Host, bookStr)
 
 	return nil
 }
