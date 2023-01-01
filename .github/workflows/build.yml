@@ -21,4 +21,5 @@ jobs:
       - name: Test
         run: go test -v ./... -covermode=count -coverprofile=c.out
       - name: Coverage
+        if: matrix.os != 'windows-latest'
         run: go tool cover -func=c.out
