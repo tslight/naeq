@@ -81,14 +81,17 @@ func buildResponse(words string, book string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Info.Printf("NAEQ: %d", i)
+	log.Info.Print("NAEQ: ", i)
+
 	b, err := j.FromEFSPath(books.EFS, fmt.Sprint(book, ".json"))
 	if err != nil {
 		return nil, err
 	}
 	log.Info.Printf("BOOK: %s (%s)", b["liber"], b["name"])
+
 	matches := alw.GetMatches(i, b)
-	log.Info.Printf("Successfully found %d matches! :-)", len(matches))
+	log.Info.Print("MATCHES: ", len(matches))
+
 	response := Response{
 		Liber:      b["liber"],
 		Book:       b["name"],
@@ -96,6 +99,7 @@ func buildResponse(words string, book string) (interface{}, error) {
 		MatchCount: len(matches),
 		Matches:    matches,
 	}
+
 	log.Debug.Printf("RESPONSE:\n%#v", response)
 	return response, nil
 }
@@ -107,9 +111,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	log.Request(r)
 	if r.URL.Path != "/" {
+		log.Error.Print(http.StatusNotFound, r.URL.Path, " NOT FOUND")
 		http.NotFound(w, r)
 		return
 	}
+
 	switch r.Method {
 	case http.MethodGet:
 		words := r.URL.Query().Get("words")
@@ -137,23 +143,30 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		decoder.DisallowUnknownFields()
 		if err := decoder.Decode(&data); err != nil {
-			log.Error.Println(err)
-			http.Error(w, err.Error(), http.StatusBadRequest)
+			errMsg := fmt.Sprintf("%d BAD REQUEST %v", http.StatusBadRequest, err)
+			log.Error.Print(errMsg)
+			http.Error(w, errMsg, http.StatusBadRequest)
 			return
 		}
 		response, err = buildResponse(data.Words, data.Book)
 		if err != nil {
-			log.Error.Println(err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			errMsg := fmt.Sprintf(
+				"%d INTERNAL SERVER ERROR %v", http.StatusInternalServerError, err,
+			)
+			log.Error.Print(errMsg)
+			http.Error(w, errMsg, http.StatusInternalServerError)
 			return
 		}
 	default:
-		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		errMsg := fmt.Sprint(http.StatusMethodNotAllowed, " METHOD NOT ALLOWED")
+		log.Error.Print(errMsg)
+		http.Error(w, errMsg, http.StatusMethodNotAllowed)
 		return
 	}
+
 	err = json.NewEncoder(w).Encode(response)
 	if err != nil {
-		log.Error.Println(err)
+		log.Error.Print(err)
 	}
 }
 

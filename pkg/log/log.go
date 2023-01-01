@@ -98,6 +98,6 @@ func Request(r *http.Request) {
 	}
 	bstr := string(b)
 	if bstr != "" {
-		Info.Println(bstr)
+		Info.Print("BODY: ", bstr)
 	}
 }
