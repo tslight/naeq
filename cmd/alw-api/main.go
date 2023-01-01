@@ -111,7 +111,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 	log.Request(r)
 	if r.URL.Path != "/" {
-		log.Error.Print(http.StatusNotFound, r.URL.Path, " NOT FOUND")
+		log.Error.Print(http.StatusNotFound, " NOT FOUND")
 		http.NotFound(w, r)
 		return
 	}
