@@ -22,7 +22,7 @@ var (
 
 var Version = "unknown"
 
-const defaultBook = "liber-al.json"
+const defaultBook = "liber-al"
 
 type Data struct {
 	Book  string `json:"book"`
@@ -85,7 +85,7 @@ func buildResponse(words string, book string) (interface{}, error) {
 		return nil, err
 	}
 	log.Printf("NAEQ Sum: %d", i)
-	b, err := j.FromEFSPath(books.EFS, book)
+	b, err := j.FromEFSPath(books.EFS, fmt.Sprint(book, ".json"))
 	if err != nil {
 		return nil, err
 	}
@@ -136,9 +136,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		decoder.DisallowUnknownFields()
 		if err := decoder.Decode(&data); err != nil {
 			log.Println(err)
-			http.Error(
-				w, fmt.Sprintf("Bad Request: %s", err.Error()), http.StatusBadRequest,
-			)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		response, err = buildResponse(data.Words, data.Book)

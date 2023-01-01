@@ -63,7 +63,7 @@ func TestValidGetQueryParamsWithNoBook(t *testing.T) {
 }
 
 func TestValidGetQueryParamsWithBook(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/?words=foo&book=liber-i.json", nil)
+	req := httptest.NewRequest(http.MethodGet, "/?words=foo&book=liber-i", nil)
 	w := httptest.NewRecorder()
 	Handler(w, req)
 	if want, got := http.StatusOK, w.Result().StatusCode; want != got {
@@ -95,7 +95,7 @@ func TestValidGetQueryParamsWithBook(t *testing.T) {
 }
 
 func TestInvalidFieldPostRequest(t *testing.T) {
-	json := strings.NewReader("{\"book\": \"liber-al.json\", \"word\": \"foo\"}")
+	json := strings.NewReader("{\"book\": \"liber-al\", \"word\": \"foo\"}")
 	req := httptest.NewRequest(http.MethodPost, "/", json)
 	w := httptest.NewRecorder()
 	Handler(w, req)
@@ -105,7 +105,7 @@ func TestInvalidFieldPostRequest(t *testing.T) {
 }
 
 func TestInvalidBookPostRequest(t *testing.T) {
-	json := strings.NewReader("{\"book\": \"liber-fuck.json\", \"words\": \"foo\"}")
+	json := strings.NewReader("{\"book\": \"liber-fuck\", \"words\": \"foo\"}")
 	req := httptest.NewRequest(http.MethodPost, "/", json)
 	w := httptest.NewRecorder()
 	Handler(w, req)

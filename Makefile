@@ -23,3 +23,7 @@ clean: ; @rm -fv ./alw-*-*-*
 build_and_run_api:
 	go build ./cmd/alw-api
 	./alw-api -p 80
+
+test:
+	go test ./... -covermode=count -coverprofile=c.out
+	go tool cover -func=c.out
