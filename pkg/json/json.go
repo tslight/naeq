@@ -21,7 +21,7 @@ func FromEFSPath(fs embed.FS, path string) (map[string]interface{}, error) {
 	}
 
 	if !Valid(string(byteValue)) {
-		return nil, fmt.Errorf("%s is not a valid JSON file\n", path)
+		return nil, fmt.Errorf("%s is not a valid JSON file", path)
 	}
 
 	var result map[string]interface{}
@@ -47,7 +47,7 @@ func FromPath(path string) (map[string]interface{}, error) {
 	}
 
 	if !Valid(string(byteValue)) {
-		return nil, fmt.Errorf("%s is not a valid JSON file\n", path)
+		return nil, fmt.Errorf("%s is not a valid JSON file", path)
 	}
 
 	var result map[string]interface{}
