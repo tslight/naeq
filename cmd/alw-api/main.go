@@ -61,8 +61,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) error {
 		bookStr += fmt.Sprintln(v)
 	}
 
-	fmt.Fprintf(w, `
-%s
+	fmt.Fprintf(w, about+`
 
 Examples:
 
@@ -74,7 +73,7 @@ curl -X POST %[1]s://%[2]s -d '{"book": "liber-x", "words": "hellier"}'
 Available Books:
 
 %s
-`, about, scheme, r.Host, bookStr)
+`, scheme, r.Host, bookStr)
 
 	return nil
 }
