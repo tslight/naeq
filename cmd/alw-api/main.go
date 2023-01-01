@@ -81,12 +81,12 @@ func buildResponse(words string, book string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Info.Printf("NAEQ Sum: %d", i)
+	log.Info.Printf("NAEQ: %d", i)
 	b, err := j.FromEFSPath(books.EFS, fmt.Sprint(book, ".json"))
 	if err != nil {
 		return nil, err
 	}
-	log.Info.Printf("%s = %s (%s)", book, b["liber"], b["name"])
+	log.Info.Printf("BOOK: %s (%s)", b["liber"], b["name"])
 	matches := alw.GetMatches(i, b)
 	log.Info.Printf("Successfully found %d matches! :-)", len(matches))
 	response := Response{

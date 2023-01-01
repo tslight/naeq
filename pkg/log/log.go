@@ -94,7 +94,7 @@ func Request(r *http.Request) {
 	agent := r.Header.Get("User-Agent")
 	Info.Print("AGENT: ", agent)
 	if r.URL.RawQuery != "" {
-		Info.Print("Query Params: ", r.URL.RawQuery)
+		Info.Print("QUERY: ", r.URL.RawQuery)
 	}
 	bstr := string(b)
 	if bstr != "" {
