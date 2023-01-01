@@ -17,19 +17,27 @@ var (
 	Error *log.Logger
 )
 
+func setDebug(outMW io.Writer) {
+	Debug.SetOutput(outMW)
+	loggers := []*log.Logger{}
+	loggers = append(loggers, Info, Warn, Error)
+	for _, v := range loggers {
+		v.SetFlags(log.LstdFlags | log.Lshortfile | log.Lmsgprefix)
+	}
+}
+
 func setLogLevel(outMW io.Writer) {
 	isDebug, isDebugPresent := os.LookupEnv("DEBUG")
 	if isDebugPresent && strings.ToLower(isDebug) == "true" {
-		Debug.SetOutput(outMW)
-		Debug.Println("LOGLEVEL set to [DEBUG]")
+		setDebug(outMW)
 		return
 	}
 	level, levelPresent := os.LookupEnv("LOGLEVEL")
 	if levelPresent {
+		Info.Println("LOGLEVEL set to " + level)
 		switch strings.ToLower(level) {
 		case "1", "debug", "trace":
-			Debug.SetOutput(outMW)
-			Debug.Println("LOGLEVEL set to " + level)
+			setDebug(outMW)
 		case "2", "info", "information":
 			Debug.SetOutput(io.Discard)
 		case "3", "warn", "warning":
@@ -65,10 +73,10 @@ func init() {
 	outMW := io.MultiWriter(os.Stdout, file)
 	errMW := io.MultiWriter(os.Stderr, file)
 
-	Debug = log.New(io.Discard, "[DEBUG] ", log.Ldate|log.Ltime|log.Lshortfile)
-	Info = log.New(outMW, "[INFO] ", log.LstdFlags)
-	Warn = log.New(outMW, "[WARNING] ", log.LstdFlags)
-	Error = log.New(errMW, "[ERROR] ", log.LstdFlags)
+	Debug = log.New(io.Discard, "[DEBUG] ", log.LstdFlags|log.Lshortfile|log.Lmsgprefix)
+	Info = log.New(outMW, "[INFO] ", log.LstdFlags|log.Lmsgprefix)
+	Warn = log.New(outMW, "[WARNING] ", log.LstdFlags|log.Lmsgprefix)
+	Error = log.New(errMW, "[ERROR] ", log.LstdFlags|log.Lmsgprefix)
 
 	setLogLevel(outMW)
 }
