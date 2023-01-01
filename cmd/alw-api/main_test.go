@@ -27,6 +27,7 @@ func TestValidGetQueryParamsWithNoBook(t *testing.T) {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 	expectedBody := Response{
+		Liber:      "Liber XXXI",
 		Book:       "The Book of the Law",
 		Sum:        32,
 		MatchCount: 15,
@@ -70,6 +71,7 @@ func TestValidGetQueryParamsWithBook(t *testing.T) {
 		t.Fatalf("expected a %d, instead got: %d", want, got)
 	}
 	expectedBody := Response{
+		Liber:      "Liber I",
 		Book:       "The Book of the Magus",
 		Sum:        32,
 		MatchCount: 4,

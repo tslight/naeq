@@ -12,6 +12,7 @@ import (
 
 	"github.com/tslight/naeq/assets/books"
 	"github.com/tslight/naeq/pkg/alw"
+	"github.com/tslight/naeq/pkg/efs"
 	j "github.com/tslight/naeq/pkg/json"
 )
 
@@ -30,6 +31,7 @@ type Data struct {
 }
 
 type Response struct {
+	Liber      interface{}   `json:"liber"`
 	Book       interface{}   `json:"book"`
 	Sum        int           `json:"sum"`
 	MatchCount int           `json:"match_count"`
@@ -58,13 +60,23 @@ func logRequest(r *http.Request) {
 	}
 }
 
-func aboutHandler(w http.ResponseWriter, r *http.Request) {
+func aboutHandler(w http.ResponseWriter, r *http.Request) error {
 	var scheme string
 	if r.TLS == nil {
 		scheme = "http"
 	} else {
 		scheme = "https"
 	}
+
+	bookNames, err := efs.GetBaseNamesSansExt(&books.EFS)
+	if err != nil {
+		return err
+	}
+	bookStr := ""
+	for _, v := range bookNames {
+		bookStr += fmt.Sprintln(v)
+	}
+
 	fmt.Fprintf(w, `
 DO WHAT THOU WILT!
 
@@ -76,7 +88,13 @@ curl -X GET  %[1]s://%[2]s?words=hellier
 curl -X GET  %[1]s://%[2]s?words=hellier&book=liber-i.json
 curl -X POST %[1]s://%[2]s -d '{"words": "hellier"}'
 curl -X POST %[1]s://%[2]s -d '{"book": "liber-x.json", "words": "hellier"}'
-`, scheme, r.Host)
+
+Available Books:
+
+%s
+`, scheme, r.Host, bookStr)
+
+	return nil
 }
 
 func buildResponse(words string, book string) (interface{}, error) {
@@ -89,10 +107,11 @@ func buildResponse(words string, book string) (interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("%s = %s", book, b["name"])
+	log.Printf("%s = %s (%s)", book, b["liber"], b["name"])
 	matches := alw.GetMatches(i, b)
 	log.Printf("Successfully found %d matches! :-)", len(matches))
 	response := Response{
+		Liber:      b["liber"],
 		Book:       b["name"],
 		Sum:        i,
 		MatchCount: len(matches),
@@ -126,7 +145,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 		} else {
-			aboutHandler(w, r)
+			err := aboutHandler(w, r)
+			if err != nil {
+				log.Println(err)
+			}
 			return
 		}
 	case http.MethodPost:
