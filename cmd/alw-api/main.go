@@ -96,6 +96,7 @@ func buildResponse(words string, book string) (interface{}, error) {
 		MatchCount: len(matches),
 		Matches:    matches,
 	}
+	log.Debug.Printf("RESPONSE:\n%#v", response)
 	return response, nil
 }
 

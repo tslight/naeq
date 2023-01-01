@@ -74,17 +74,23 @@ func init() {
 }
 
 func Request(r *http.Request) {
+	Debug.Printf("REQUEST:\n%#v", r)
+	Debug.Printf("REQUEST.URL:\n%#v", r.URL)
+
 	b, err := io.ReadAll(r.Body)
 	if err != nil {
 		Error.Fatal(err)
 	}
 	// Replace the body with a new reader after reading from the original
 	r.Body = io.NopCloser(bytes.NewBuffer(b))
-	ip := r.RemoteAddr
-	// ip := r.Header.Get("Client-Ip")
+	var ip string
+	ip = r.Header.Get("Client-Ip")
+	if ip == "" {
+		ip = r.RemoteAddr
+	}
 	agent := r.Header.Get("User-Agent")
 	Info.Printf(
-		"%s to %s from %s at %s\n", r.Method, r.URL.Path, agent, ip,
+		"%s to %s%s from %s at %s\n", r.Method, r.Host, r.URL.Path, agent, ip,
 	)
 	if r.URL.RawQuery != "" {
 		Info.Printf("Query Params: %s", r.URL.RawQuery)
