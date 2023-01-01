@@ -20,6 +20,5 @@ jobs:
         uses: golangci/golangci-lint-action@v3
       - name: Test
         run: |
-          go test -v ./... -covermode=count -coverprofile=coverage.out
-          # TODO: figure out why this doesn't work on Windows
-          # go tool cover -func=coverage.out
+          go test -v ./... -covermode=count -coverprofile=c.out
+          go tool cover -func=c.out
