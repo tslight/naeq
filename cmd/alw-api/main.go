@@ -85,9 +85,9 @@ The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
 https://github.com/tslight/naeq
 
 curl -X GET  %[1]s://%[2]s?words=hellier
-curl -X GET  %[1]s://%[2]s?words=hellier&book=liber-i.json
+curl -X GET  %[1]s://%[2]s?words=hellier&book=liber-i
 curl -X POST %[1]s://%[2]s -d '{"words": "hellier"}'
-curl -X POST %[1]s://%[2]s -d '{"book": "liber-x.json", "words": "hellier"}'
+curl -X POST %[1]s://%[2]s -d '{"book": "liber-x", "words": "hellier"}'
 
 Available Books:
 
