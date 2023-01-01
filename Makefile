@@ -21,9 +21,9 @@ all: $(CMDS)
 clean: ; @rm -fv ./alw-*-*-*
 
 run:
-	go build ./cmd/alw-api
-	./alw-api -p 80
+	@go build ./cmd/alw-api
+	@./alw-api -p 80
 
 test:
-	go test ./... -covermode=count -coverprofile=c.out
-	go tool cover -func=c.out
+	@go test ./... -covermode=count -coverprofile=c.out
+	@go tool cover -func=c.out

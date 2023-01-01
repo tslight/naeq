@@ -76,7 +76,7 @@ func TestValidGetQueryParamsWithBook(t *testing.T) {
 		Matches: append(make([]interface{}, 0),
 			"his",
 			"last",
-			"{{11}} his",
+			"(Verse 11) his",
 			"what",
 		),
 	}
