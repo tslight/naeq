@@ -14,8 +14,7 @@ import (
 	"github.com/tslight/naeq/pkg/log"
 )
 
-var about = `
-DO WHAT THOU WILT!
+var about = `DO WHAT THOU WILT!
 
 The Secret Cipher of the UFOnauts as an API, because ¯\_(ツ)_/¯
 
@@ -62,7 +61,6 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	fmt.Fprintf(w, about+`
-
 Examples:
 
 curl -X GET  %[1]s://%[2]s?words=hellier
