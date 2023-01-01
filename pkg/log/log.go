@@ -54,8 +54,8 @@ func init() {
 		log.Println("Logging to " + envFile)
 		file, err = os.OpenFile(envFile, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	} else {
-		t := time.Now().Format("20060102150405")
-		file, err = os.OpenFile(t+".txt", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+		t := time.Now().Format("2006-01-02")
+		file, err = os.OpenFile(t+".log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
 	}
 
 	if err != nil {
