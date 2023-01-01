@@ -66,8 +66,15 @@ Usage: alw-api [options...]:
   -v    print version info
 ```
 
-I have instances deployed [here](https://naeq.onrender.com) and
-[here](https://alw.up.railway.app/), if you'd like to try it out:
+I have instances deployed [here](https://alw.up.railway.app/) and
+[here](https://naeq.onrender.com), if you'd like to try it out:
+
+``` shell
+curl -X GET https://alw.up.railway.app?words=hellier
+curl -X GET https://alw.up.railway.app?words=hellier&book=liber-i
+curl -X POST https://alw.up.railway.app -d '{"words": "hellier"}'
+curl -X POST https://alw.up.railway.app -d '{"book": "liber-x", "words": "hellier"}'
+```
 
 ``` shell
 curl -X GET https://naeq.onrender.com?words=hellier
@@ -76,12 +83,6 @@ curl -X POST https://naeq.onrender.com -d '{"words": "hellier"}'
 curl -X POST https://naeq.onrender.com -d '{"book": "liber-x", "words": "hellier"}'
 ```
 
-``` shell
-curl -X GET https://alw.up.railway.app?words=hellier
-curl -X GET https://alw.up.railway.app?words=hellier&book=liber-i
-curl -X POST https://alw.up.railway.app -d '{"words": "hellier"}'
-curl -X POST https://alw.up.railway.app -d '{"book": "liber-x", "words": "hellier"}'
-```
 
 ## Context/Background
 
