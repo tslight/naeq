@@ -26,6 +26,7 @@ var (
 	version = flag.Bool("v", false, "print version info")
 )
 
+// Version set at compile time from envvar with -X main.Version=$(VERSION)
 var Version = "unknown"
 
 const defaultBook = "liber-al"
@@ -104,7 +105,7 @@ func buildResponse(words string, book string) (interface{}, error) {
 	return response, nil
 }
 
-func Handler(w http.ResponseWriter, r *http.Request) {
+func handler(w http.ResponseWriter, r *http.Request) {
 	var response interface{}
 	var err error
 	var book string
@@ -180,7 +181,7 @@ func main() {
 		return
 	}
 	log.Info.Println("Synchronicity engines starting...")
-	http.HandleFunc("/", Handler)
+	http.HandleFunc("/", handler)
 	envPort, envPortPresent := os.LookupEnv("PORT")
 	if envPortPresent {
 		log.Error.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", envPort), nil))
