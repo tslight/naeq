@@ -15,8 +15,10 @@ func runLoggers() {
 	Error.Print("qux")
 }
 
+var logName = "naeq-pkg-log-test.log"
+
 func TestDebugLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), "log")
+	logFile := filepath.Join(os.TempDir(), logName)
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "debug")
 	setupLoggers()
@@ -49,7 +51,7 @@ func TestDebugLogLevel(t *testing.T) {
 }
 
 func TestInfoLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), "log")
+	logFile := filepath.Join(os.TempDir(), logName)
 	t.Setenv("LOGFILE", logFile)
 	setupLoggers()
 
@@ -78,7 +80,7 @@ func TestInfoLogLevel(t *testing.T) {
 }
 
 func TestWarningLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), "log")
+	logFile := filepath.Join(os.TempDir(), logName)
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "warning")
 	setupLoggers()
@@ -111,7 +113,7 @@ func TestWarningLogLevel(t *testing.T) {
 }
 
 func TestErrorLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), "log")
+	logFile := filepath.Join(os.TempDir(), logName)
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "error")
 	setupLoggers()
