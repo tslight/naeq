@@ -126,8 +126,11 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 			}
 			response, err = buildResponse(words, book)
 			if err != nil {
-				log.Error.Println(err)
-				http.Error(w, err.Error(), http.StatusInternalServerError)
+				errMsg := fmt.Sprintf(
+					"%d INTERNAL SERVER ERROR %v", http.StatusInternalServerError, err,
+				)
+				log.Error.Print(errMsg)
+				http.Error(w, errMsg, http.StatusInternalServerError)
 				return
 			}
 		} else {

@@ -22,7 +22,7 @@ func setDebug(outMW io.Writer) {
 	loggers := []*log.Logger{}
 	loggers = append(loggers, Info, Warn, Error)
 	for _, v := range loggers {
-		v.SetFlags(log.LstdFlags | log.Lshortfile | log.Lmsgprefix)
+		v.SetFlags(log.LstdFlags | log.Lshortfile)
 	}
 }
 
@@ -32,6 +32,7 @@ func setLogLevel(outMW io.Writer) {
 		setDebug(outMW)
 		return
 	}
+
 	level, levelPresent := os.LookupEnv("LOGLEVEL")
 	if levelPresent {
 		Info.Println("LOGLEVEL set to " + level)
@@ -73,7 +74,7 @@ func init() {
 	outMW := io.MultiWriter(os.Stdout, file)
 	errMW := io.MultiWriter(os.Stderr, file)
 
-	Debug = log.New(io.Discard, "[DEBUG] ", log.LstdFlags|log.Lshortfile|log.Lmsgprefix)
+	Debug = log.New(io.Discard, "[DEBUG] ", log.LstdFlags|log.Lshortfile)
 	Info = log.New(outMW, "[INFO] ", log.LstdFlags|log.Lmsgprefix)
 	Warn = log.New(outMW, "[WARNING] ", log.LstdFlags|log.Lmsgprefix)
 	Error = log.New(errMW, "[ERROR] ", log.LstdFlags|log.Lmsgprefix)
@@ -85,12 +86,6 @@ func Request(r *http.Request) {
 	Debug.Printf("REQUEST:\n%#v", r)
 	Debug.Printf("REQUEST.URL:\n%#v", r.URL)
 
-	b, err := io.ReadAll(r.Body)
-	if err != nil {
-		Error.Fatal(err)
-	}
-	// Replace the body with a new reader after reading from the original
-	r.Body = io.NopCloser(bytes.NewBuffer(b))
 	var ip string
 	ip = r.Header.Get("Client-Ip")
 	if ip == "" {
@@ -99,11 +94,22 @@ func Request(r *http.Request) {
 	Info.Printf(
 		"%s to %s%s from %s\n", r.Method, r.Host, r.URL.Path, ip,
 	)
+
 	agent := r.Header.Get("User-Agent")
 	Info.Print("AGENT: ", agent)
+
+	Debug.Print("QUERY: ", r.URL.Query())
 	if r.URL.RawQuery != "" {
 		Info.Print("QUERY: ", r.URL.RawQuery)
 	}
+
+	b, err := io.ReadAll(r.Body)
+	if err != nil {
+		Error.Fatal(err)
+	}
+	// Replace the body with a new reader after reading from the original
+	r.Body = io.NopCloser(bytes.NewBuffer(b))
+
 	bstr := string(b)
 	if bstr != "" {
 		Info.Print("BODY: ", bstr)
