@@ -31,6 +31,11 @@ func TestDebugLogLevel(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	err = file.Close()
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	err = os.Remove(logFile)
 	if err != nil {
 		t.Fatal(err)

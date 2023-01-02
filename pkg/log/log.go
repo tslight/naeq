@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+var file *os.File
+
 var (
 	Debug *log.Logger
 	Info  *log.Logger
@@ -55,7 +57,6 @@ func setLogLevel(outMW io.Writer) {
 }
 
 func setupLoggers() {
-	var file *os.File
 	var err error
 
 	envFile, envFilePresent := os.LookupEnv("LOGFILE")
