@@ -54,7 +54,7 @@ func setLogLevel(outMW io.Writer) {
 	}
 }
 
-func init() {
+func setupLoggers() {
 	var file *os.File
 	var err error
 
@@ -80,6 +80,10 @@ func init() {
 	Error = log.New(errMW, "[ERROR] ", log.LstdFlags|log.Lmsgprefix)
 
 	setLogLevel(outMW)
+}
+
+func init() {
+	setupLoggers()
 }
 
 func Request(r *http.Request) {
