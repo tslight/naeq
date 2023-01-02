@@ -3,6 +3,7 @@ package log
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"testing"
 	"time"
 )
@@ -15,7 +16,7 @@ func runLoggers() {
 }
 
 func TestDebugLogLevel(t *testing.T) {
-	logFile := os.TempDir() + "debug.log"
+	logFile := filepath.Join(os.TempDir(), "log")
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "debug")
 	setupLoggers()
@@ -35,12 +36,11 @@ func TestDebugLogLevel(t *testing.T) {
 
 	got := string(f)
 
-	want := fmt.Sprintf(
-		`%[1]s [INFO] LOGLEVEL set to debug
-[DEBUG] %[1]s log_test.go:11: foo
-[INFO] %[1]s log_test.go:12: bar
-[WARNING] %[1]s log_test.go:13: baz
-[ERROR] %[1]s log_test.go:14: qux
+	want := fmt.Sprintf(`%[1]s [INFO] LOGLEVEL set to debug
+[DEBUG] %[1]s log_test.go:12: foo
+[INFO] %[1]s log_test.go:13: bar
+[WARNING] %[1]s log_test.go:14: baz
+[ERROR] %[1]s log_test.go:15: qux
 `, timeNow)
 
 	if got != want {
@@ -49,7 +49,7 @@ func TestDebugLogLevel(t *testing.T) {
 }
 
 func TestInfoLogLevel(t *testing.T) {
-	logFile := os.TempDir() + "info.log"
+	logFile := filepath.Join(os.TempDir(), "log")
 	t.Setenv("LOGFILE", logFile)
 	setupLoggers()
 
@@ -78,7 +78,7 @@ func TestInfoLogLevel(t *testing.T) {
 }
 
 func TestWarningLogLevel(t *testing.T) {
-	logFile := os.TempDir() + "warning.log"
+	logFile := filepath.Join(os.TempDir(), "log")
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "warning")
 	setupLoggers()
@@ -111,7 +111,7 @@ func TestWarningLogLevel(t *testing.T) {
 }
 
 func TestErrorLogLevel(t *testing.T) {
-	logFile := os.TempDir() + "error.log"
+	logFile := filepath.Join(os.TempDir(), "log")
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "error")
 	setupLoggers()
