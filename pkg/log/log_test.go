@@ -16,22 +16,10 @@ func runLoggers() {
 }
 
 var logName = "go-pkg-log-test.log"
+var logFile = filepath.Join(os.TempDir(), logName)
 
-func TestDebugLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), logName)
-	t.Setenv("LOGFILE", logFile)
-	t.Setenv("LOGLEVEL", "debug")
-	setupLoggers()
-
-	timeNow := time.Now().Format("2006/01/02 15:04:05")
-	runLoggers()
-
-	f, err := os.ReadFile(logFile)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	err = file.Close()
+func rmLogFile(t *testing.T) {
+	err := file.Close()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,6 +28,22 @@ func TestDebugLogLevel(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+}
+
+func TestDebugLogLevel(t *testing.T) {
+	t.Setenv("LOGFILE", logFile)
+	t.Setenv("LOGLEVEL", "debug")
+
+	setupLoggers()
+	timeNow := time.Now().Format("2006/01/02 15:04:05")
+	runLoggers()
+
+	f, err := os.ReadFile(logFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rmLogFile(t)
 
 	got := string(f)
 
@@ -56,10 +60,9 @@ func TestDebugLogLevel(t *testing.T) {
 }
 
 func TestInfoLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), logName)
 	t.Setenv("LOGFILE", logFile)
-	setupLoggers()
 
+	setupLoggers()
 	timeNow := time.Now().Format("2006/01/02 15:04:05")
 	runLoggers()
 
@@ -68,10 +71,7 @@ func TestInfoLogLevel(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = os.Remove(logFile)
-	if err != nil {
-		t.Fatal(err)
-	}
+	rmLogFile(t)
 
 	got := string(f)
 
@@ -85,11 +85,10 @@ func TestInfoLogLevel(t *testing.T) {
 }
 
 func TestWarningLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), logName)
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "warning")
-	setupLoggers()
 
+	setupLoggers()
 	timeNow := time.Now().Format("2006/01/02 15:04:05")
 	runLoggers()
 
@@ -98,10 +97,7 @@ func TestWarningLogLevel(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = os.Remove(logFile)
-	if err != nil {
-		t.Fatal(err)
-	}
+	rmLogFile(t)
 
 	got := string(f)
 
@@ -118,11 +114,10 @@ func TestWarningLogLevel(t *testing.T) {
 }
 
 func TestErrorLogLevel(t *testing.T) {
-	logFile := filepath.Join(os.TempDir(), logName)
 	t.Setenv("LOGFILE", logFile)
 	t.Setenv("LOGLEVEL", "error")
-	setupLoggers()
 
+	setupLoggers()
 	timeNow := time.Now().Format("2006/01/02 15:04:05")
 	runLoggers()
 
@@ -131,10 +126,7 @@ func TestErrorLogLevel(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	err = os.Remove(logFile)
-	if err != nil {
-		t.Fatal(err)
-	}
+	rmLogFile(t)
 
 	got := string(f)
 
