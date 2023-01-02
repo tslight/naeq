@@ -25,5 +25,6 @@ run:
 	@./alw-api -p 80
 
 test:
+	@go vet ./...
 	@go test ./... -covermode=count -coverprofile=c.out
 	@go tool cover -func=c.out
