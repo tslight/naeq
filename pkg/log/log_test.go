@@ -33,7 +33,7 @@ func TestDebugLogLevel(t *testing.T) {
 
 	err = os.Remove(logFile)
 	if err != nil {
-		t.Fatal(t)
+		t.Fatal(err)
 	}
 
 	got := string(f)
@@ -65,7 +65,7 @@ func TestInfoLogLevel(t *testing.T) {
 
 	err = os.Remove(logFile)
 	if err != nil {
-		t.Fatal(t)
+		t.Fatal(err)
 	}
 
 	got := string(f)
@@ -95,7 +95,7 @@ func TestWarningLogLevel(t *testing.T) {
 
 	err = os.Remove(logFile)
 	if err != nil {
-		t.Fatal(t)
+		t.Fatal(err)
 	}
 
 	got := string(f)
@@ -128,7 +128,7 @@ func TestErrorLogLevel(t *testing.T) {
 
 	err = os.Remove(logFile)
 	if err != nil {
-		t.Fatal(t)
+		t.Fatal(err)
 	}
 
 	got := string(f)
