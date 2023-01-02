@@ -15,7 +15,7 @@ func runLoggers() {
 	Error.Print("qux")
 }
 
-var logName = "naeq-pkg-log-test.log"
+var logName = "go-pkg-log-test.log"
 
 func TestDebugLogLevel(t *testing.T) {
 	logFile := filepath.Join(os.TempDir(), logName)
