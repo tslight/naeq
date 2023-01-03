@@ -6,3 +6,4 @@ linters:
     - gosec
     - misspell
     - stylecheck
+    - whitespace
