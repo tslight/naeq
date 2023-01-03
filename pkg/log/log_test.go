@@ -2,8 +2,11 @@ package log
 
 import (
 	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 )
@@ -48,14 +51,14 @@ func TestDebugLogLevel(t *testing.T) {
 	got := string(f)
 
 	want := fmt.Sprintf(`%[1]s [INFO] LOGLEVEL set to debug
-[DEBUG] %[1]s log_test.go:12: foo
-[INFO] %[1]s log_test.go:13: bar
-[WARNING] %[1]s log_test.go:14: baz
-[ERROR] %[1]s log_test.go:15: qux
+[DEBUG] %[1]s log_test.go:15: foo
+[INFO] %[1]s log_test.go:16: bar
+[WARNING] %[1]s log_test.go:17: baz
+[ERROR] %[1]s log_test.go:18: qux
 `, timeNow)
 
 	if got != want {
-		t.Fatalf("%sNOT THE SAME AS:\n%s", got, want)
+		t.Fatalf("\n%s\nNOT THE SAME AS:\n%s", got, want)
 	}
 }
 
@@ -80,7 +83,7 @@ func TestInfoLogLevel(t *testing.T) {
 	)
 
 	if got != want {
-		t.Fatalf("%sNOT THE SAME AS:\n%s", got, want)
+		t.Fatalf("\n%s\nNOT THE SAME AS:\n%s", got, want)
 	}
 }
 
@@ -109,7 +112,7 @@ func TestWarningLogLevel(t *testing.T) {
 	)
 
 	if got != want {
-		t.Fatalf("%sNOT THE SAME AS:\n%s", got, want)
+		t.Fatalf("\n%s\nNOT THE SAME AS:\n%s", got, want)
 	}
 }
 
@@ -135,6 +138,32 @@ func TestErrorLogLevel(t *testing.T) {
 	)
 
 	if got != want {
-		t.Fatalf("%sNOT THE SAME AS:\n%s", got, want)
+		t.Fatalf("\n%s\nNOT THE SAME AS:\n%s", got, want)
+	}
+}
+
+func TestLogRequest(t *testing.T) {
+	t.Setenv("LOGFILE", logFile)
+	req := httptest.NewRequest(http.MethodGet, "/", nil)
+	ip := req.RemoteAddr
+	setupLoggers()
+	timeNow := time.Now().Format("2006/01/02 15:04:05")
+	Request(req)
+
+	f, err := os.ReadFile(logFile)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	rmLogFile(t)
+
+	got := strings.TrimSpace(string(f))
+
+	want := fmt.Sprintf(
+		"%[1]s [INFO] GET to example.com/ from %[2]s\n%[1]s [INFO] AGENT:", timeNow, ip,
+	)
+
+	if got != want {
+		t.Fatalf("\n%s\nNOT THE SAME AS:\n%s", got, want)
 	}
 }
