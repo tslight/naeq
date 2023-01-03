@@ -1,0 +1,8 @@
+linters:
+  # default: errcheck gosimple govet ineffassign staticcheck typecheck unused
+  enable:
+    - gocyclo
+    - gofmt
+    - gosec
+    - misspell
+    - stylecheck
