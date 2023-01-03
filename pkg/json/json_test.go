@@ -1,10 +1,14 @@
 package json
 
 import (
+	"embed"
 	"fmt"
 	"runtime"
 	"testing"
 )
+
+//go:embed *.json
+var EFS embed.FS
 
 func TestValid(t *testing.T) {
 	json := "{\"foo\": \"bar\"}"
@@ -35,6 +39,19 @@ func TestFromPath(t *testing.T) {
 	}
 	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
 		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, path, got, want)
+	}
+}
+
+func TestFromEFSPath(t *testing.T) {
+	got, err := FromEFSPath(EFS, "test.json")
+	want := map[string]interface{}{
+		"new": "kirk",
+	}
+	if err != nil {
+		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, got, err, want)
+	}
+	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
+		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, got, got, want)
 	}
 }
 
