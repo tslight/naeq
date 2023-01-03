@@ -4,7 +4,7 @@ import (
 	"embed"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 )
 
@@ -41,7 +41,7 @@ func FromPath(path string) (map[string]interface{}, error) {
 
 	defer f.Close()
 
-	byteValue, err := ioutil.ReadAll(f)
+	byteValue, err := io.ReadAll(f)
 	if err != nil {
 		return nil, err
 	}

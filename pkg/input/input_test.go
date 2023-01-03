@@ -1,7 +1,6 @@
 package input
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 )
@@ -21,7 +20,7 @@ func TestGet(t *testing.T) {
 // https://stackoverflow.com/a/46365584/11133327
 func TestGetFromStdin(t *testing.T) {
 	content := []byte("foo bar baz")
-	tmpfile, err := ioutil.TempFile("", "example")
+	tmpfile, err := os.CreateTemp("", "example")
 	if err != nil {
 		t.Fatal(err)
 	}
