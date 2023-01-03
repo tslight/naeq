@@ -19,6 +19,24 @@ func TestGetRequest(t *testing.T) {
 	}
 }
 
+func TestNotFoundGetRequest(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/not/found", nil)
+	w := httptest.NewRecorder()
+	handler(w, req)
+	if want, got := http.StatusNotFound, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
+func TestMethodNotAllowed(t *testing.T) {
+	req := httptest.NewRequest(http.MethodPut, "/", nil)
+	w := httptest.NewRecorder()
+	handler(w, req)
+	if want, got := http.StatusMethodNotAllowed, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
 func TestValidGetQueryParamsWithNoBook(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/?words=foo", nil)
 	w := httptest.NewRecorder()
@@ -175,6 +193,15 @@ func TestValidPostRequestWithBook(t *testing.T) {
 	}
 }
 
+func TestInvalidBookGetRequest(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/?words=foo&book=liber-foo", nil)
+	w := httptest.NewRecorder()
+	handler(w, req)
+	if want, got := http.StatusInternalServerError, w.Result().StatusCode; want != got {
+		t.Fatalf("expected a %d, instead got: %d", want, got)
+	}
+}
+
 func TestInvalidFieldPostRequest(t *testing.T) {
 	json := strings.NewReader("{\"book\": \"liber-al\", \"word\": \"foo\"}")
 	req := httptest.NewRequest(http.MethodPost, "/", json)
@@ -186,7 +213,7 @@ func TestInvalidFieldPostRequest(t *testing.T) {
 }
 
 func TestInvalidBookPostRequest(t *testing.T) {
-	json := strings.NewReader("{\"book\": \"liber-fuck\", \"words\": \"foo\"}")
+	json := strings.NewReader("{\"book\": \"liber-foo\", \"words\": \"foo\"}")
 	req := httptest.NewRequest(http.MethodPost, "/", json)
 	w := httptest.NewRecorder()
 	handler(w, req)
