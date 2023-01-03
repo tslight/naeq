@@ -12,6 +12,7 @@ import (
 	"github.com/tslight/naeq/pkg/efs"
 	j "github.com/tslight/naeq/pkg/json"
 	"github.com/tslight/naeq/pkg/log"
+	"time"
 )
 
 var about = `DO WHAT THOU WILT!
@@ -22,7 +23,7 @@ https://github.com/tslight/naeq
 `
 
 var (
-	port    = flag.Int("p", 8080, "Port to listen on")
+	port    = flag.String("p", "8080", "Port to listen on")
 	version = flag.Bool("v", false, "print version info")
 )
 
@@ -180,12 +181,22 @@ func main() {
 		fmt.Println(Version)
 		return
 	}
-	log.Info.Println("Synchronicity engines starting...")
-	http.HandleFunc("/", handler)
+
 	envPort, envPortPresent := os.LookupEnv("PORT")
 	if envPortPresent {
-		log.Error.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", envPort), nil))
-	} else {
-		log.Error.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", *port), nil))
+		*port = envPort
+	}
+
+	log.Info.Print("Synchronicity engines starting on PORT:", *port)
+	http.HandleFunc("/", handler)
+
+	server := &http.Server{
+		Addr:              ":" + *port,
+		ReadHeaderTimeout: 3 * time.Second,
+	}
+
+	err := server.ListenAndServe()
+	if err != nil {
+		log.Error.Fatal(err)
 	}
 }
