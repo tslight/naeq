@@ -2,7 +2,7 @@ linters:
   # default: errcheck gosimple govet ineffassign staticcheck typecheck unused
   enable:
     - gocyclo
-    - gofmt
+    # - gofmt # spurious errors on github actions windows-latest...
     - gosec
     - misspell
     - stylecheck
