@@ -31,11 +31,11 @@ func TestNotValid(t *testing.T) {
 func TestFromPath(t *testing.T) {
 	path := "./test.json"
 	got, err := FromPath(path)
+	if err != nil {
+		t.Fatal(err)
+	}
 	want := map[string]interface{}{
 		"new": "kirk",
-	}
-	if err != nil {
-		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, path, err, want)
 	}
 	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
 		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, path, got, want)
@@ -44,11 +44,11 @@ func TestFromPath(t *testing.T) {
 
 func TestFromEFSPath(t *testing.T) {
 	got, err := FromEFSPath(EFS, "test.json")
+	if err != nil {
+		t.Fatal(err)
+	}
 	want := map[string]interface{}{
 		"new": "kirk",
-	}
-	if err != nil {
-		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, got, err, want)
 	}
 	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
 		t.Fatalf(`FromFile(%s) returned %v, instead of %v`, got, got, want)
