@@ -3,3 +3,4 @@ alw-*
 *.log
 !**/*.go
 !**/
+.direnv/
