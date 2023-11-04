@@ -4,3 +4,4 @@ alw-*
 !**/*.go
 !**/
 .direnv/
+bin/
