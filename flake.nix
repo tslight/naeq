@@ -4,21 +4,14 @@
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   inputs.gomod2nix.url = "github:nix-community/gomod2nix";
 
-  # Flake outputs
   outputs = { self, nixpkgs, gomod2nix }:
     let
-      # Systems supported
       allSystems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
 
-      # Helper to provide system-specific attributes
       forAllSystems = f: nixpkgs.lib.genAttrs allSystems (system: f {
         pkgs = nixpkgs.legacyPackages.${system};
         callPackage = nixpkgs.darwin.apple_sdk_11_0.callPackage or nixpkgs.legacyPackages.${system}.callPackage;
         system = system;
-        # pkgs = import nixpkgs {
-        #   inherit system;
-        #   overlays = [ gomod2nix.overlays.default ];
-        # };
       });
     in
       {
