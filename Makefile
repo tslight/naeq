@@ -19,7 +19,7 @@ $(CMDS): ; @CMD=$(@) $(MAKE) $(ARCHITECTURES)
 
 all: $(CMDS)
 
-clean: ; @rm -fv ./bin
+clean: ; @rm -rfv ./bin
 
 run:
 	@go build $(GOOPTS) -o ./bin/alw-api ./cmd/alw-api
