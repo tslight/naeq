@@ -14,7 +14,7 @@
 
 buildGoApplication {
   pname = "naeq";
-  version = "0.0.9";
+  version = "0.1.5";
   pwd = ./.;
   src = ./.;
   modules = ./gomod2nix.toml;

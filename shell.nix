@@ -17,5 +17,14 @@ let
   goEnv = mkGoEnv { pwd = ./.; };
 in
 pkgs.mkShell {
-  packages = [goEnv gomod2nix];
+  packages = with pkgs; [
+    gnumake
+    go_1_20
+    godef # jump to definition in editors
+    goEnv
+    golangci-lint # fast linter runners
+    gomod2nix
+    gopls # go language server for using lsp plugins
+    gotools # Go tools like goimports, godoc, and others
+  ];
 }
