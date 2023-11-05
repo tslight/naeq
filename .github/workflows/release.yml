@@ -29,7 +29,7 @@ jobs:
     - name: Release
       run: |
         assets=()
-        for asset in ./alw-*-*-*; do
+        for asset in ./bin/alw-*-*-*; do
           assets+=("-a" "$asset")
         done
         tag_name="${GITHUB_REF##*/}"
