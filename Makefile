@@ -17,15 +17,17 @@ $(ARCHITECTURES): ; @CMD=$(CMD) ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
 CMDS = alw-api alw-cli
 $(CMDS): ; @CMD=$(@) $(MAKE) $(ARCHITECTURES)
 
-all: $(CMDS)
+lint:; @golangci-lint run
+
+test:
+	@go vet ./...
+	@go test ./... -covermode=count -coverprofile=c.out
+	@go tool cover -func=c.out
+
+all: lint $(CMDS) test
 
 clean: ; @rm -rfv ./bin
 
 run:
 	@go build $(GOOPTS) -o ./bin/alw-api ./cmd/alw-api
 	@./bin/alw-api -p 80
-
-test:
-	@go vet ./...
-	@go test ./... -covermode=count -coverprofile=c.out
-	@go tool cover -func=c.out
