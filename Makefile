@@ -15,7 +15,7 @@ ARCHITECTURES = amd64 arm64
 $(ARCHITECTURES): ; @CMD=$(CMD) ARCH=$(@) $(MAKE) $(OPERATING_SYSTEMS)
 
 CMDS = alw-api alw-cli
-$(CMDS): ; @CMD=$(@) $(MAKE) $(ARCHITECTURES)
+$(CMDS):; @CMD=$(@) $(MAKE) $(ARCHITECTURES)
 
 lint:; @golangci-lint run
 
@@ -24,9 +24,9 @@ test:
 	@go test ./... -covermode=count -coverprofile=c.out
 	@go tool cover -func=c.out
 
-all: lint $(CMDS) test
+all: $(CMDS) test lint
 
-clean: ; @rm -rfv ./bin
+clean:; @rm -rfv ./bin
 
 run:
 	@go build $(GOOPTS) -o ./bin/alw-api ./cmd/alw-api
