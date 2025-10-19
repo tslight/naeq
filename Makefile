@@ -26,7 +26,7 @@ test:
 
 all: $(CMDS) test lint
 
-clean:; @rm -rfv ./bin
+clean:; @rm -rfv ./bin; find . -name '*.log' -delete
 
 run:
 	@go build $(GOOPTS) -o ./bin/alw-api ./cmd/alw-api
