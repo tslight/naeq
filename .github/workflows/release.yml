@@ -1,7 +1,7 @@
 on:
   push:
     tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - "v[0-9]+.[0-9]+.[0-9]+"
 
 name: Release
 
@@ -9,32 +9,32 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - name: Setup
-      uses: actions/setup-go@v3
-      with:
-        go-version: '>=1.20'
-    - name: Vet
-      run: go vet -v ./...
-    - name: Lint
-      uses: golangci/golangci-lint-action@v3
-    - name: Test
-      run: go test -v ./...
-    - name: Build
-      run: make all
-    - name: Install Hub
-      run: sudo apt-get update && sudo apt-get install -y hub
-    # https://github.com/actions/upload-release-asset/issues/28#issuecomment-617208601
-    # https://github.com/github/hub
-    - name: Release
-      run: |
-        assets=()
-        for asset in ./bin/alw-*-*-*; do
-          assets+=("-a" "$asset")
-        done
-        tag_name="${GITHUB_REF##*/}"
-        hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Clean
-      run: make clean
+      - uses: actions/checkout@v3
+      - name: Setup
+        uses: actions/setup-go@v3
+        with:
+          go-version: ">=1.20"
+      - name: Vet
+        run: go vet -v ./...
+      - name: Lint
+        uses: golangci/golangci-lint-action@v8
+      - name: Test
+        run: go test -v ./...
+      - name: Build
+        run: make all
+      - name: Install Hub
+        run: sudo apt-get update && sudo apt-get install -y hub
+      # https://github.com/actions/upload-release-asset/issues/28#issuecomment-617208601
+      # https://github.com/github/hub
+      - name: Release
+        run: |
+          assets=()
+          for asset in ./bin/alw-*-*-*; do
+            assets+=("-a" "$asset")
+          done
+          tag_name="${GITHUB_REF##*/}"
+          hub release create "${assets[@]}" -m "$tag_name" "$tag_name"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Clean
+        run: make clean
