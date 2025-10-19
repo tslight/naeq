@@ -2,8 +2,9 @@ package alw
 
 import (
 	"fmt"
-	"github.com/tslight/naeq/pkg/json"
 	"testing"
+
+	"github.com/tslight/naeq/pkg/json"
 )
 
 func TestSumNumbersInString(t *testing.T) {
@@ -85,7 +86,7 @@ func TestGetMatches(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := GetMatches(sum, b)
-	want := append(make([]interface{}, 0),
+	want := append(make([]any, 0),
 		"3 8 a b",
 		"a b k 2",
 		"door",
@@ -119,7 +120,7 @@ func TestGetMatchesFooBarBazLiberI(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := GetMatches(sum, b)
-	want := append(make([]interface{}, 0),
+	want := append(make([]any, 0),
 		"destroy",
 		"doth the",
 		"for he is",

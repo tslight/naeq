@@ -56,7 +56,7 @@ func main() {
 		return
 	}
 
-	var book map[string]interface{}
+	var book map[string]any
 	if *path != "" {
 		book, err = json.FromPath(*path)
 		if err != nil {

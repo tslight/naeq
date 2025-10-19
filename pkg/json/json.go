@@ -14,7 +14,7 @@ func Valid(str string) bool {
 	return json.Unmarshal([]byte(str), &js) == nil
 }
 
-func FromEFSPath(fs embed.FS, path string) (map[string]interface{}, error) {
+func FromEFSPath(fs embed.FS, path string) (map[string]any, error) {
 	byteValue, err := fs.ReadFile(path)
 	if err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func FromEFSPath(fs embed.FS, path string) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("%s is not a valid JSON file", path)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	err = json.Unmarshal([]byte(byteValue), &result)
 	if err != nil {
 		return nil, err
@@ -33,7 +33,7 @@ func FromEFSPath(fs embed.FS, path string) (map[string]interface{}, error) {
 	return result, nil
 }
 
-func FromPath(path string) (map[string]interface{}, error) {
+func FromPath(path string) (map[string]any, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return nil, err
@@ -50,7 +50,7 @@ func FromPath(path string) (map[string]interface{}, error) {
 		return nil, fmt.Errorf("%s is not a valid JSON file", path)
 	}
 
-	var result map[string]interface{}
+	var result map[string]any
 	err = json.Unmarshal([]byte(byteValue), &result)
 	if err != nil {
 		return nil, err

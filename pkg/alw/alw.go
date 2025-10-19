@@ -39,9 +39,9 @@ func GetSum(s string) (int, error) {
 	return value, nil
 }
 
-func GetMatches(sum int, b map[string]interface{}) []interface{} {
+func GetMatches(sum int, b map[string]any) []any {
 	key := strconv.Itoa(sum)
-	matches := reflect.ValueOf(b[key]).Interface().([]interface{})
+	matches := reflect.ValueOf(b[key]).Interface().([]any)
 
 	return matches
 }

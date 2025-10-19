@@ -34,7 +34,7 @@ func TestFromPath(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]interface{}{
+	want := map[string]any{
 		"new": "kirk",
 	}
 	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {
@@ -47,7 +47,7 @@ func TestFromEFSPath(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := map[string]interface{}{
+	want := map[string]any{
 		"new": "kirk",
 	}
 	if fmt.Sprintf("%#v", got) != fmt.Sprintf("%#v", want) {

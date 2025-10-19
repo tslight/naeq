@@ -7,12 +7,13 @@ import (
 	"net/http"
 	"os"
 
+	"time"
+
 	"github.com/tslight/naeq/assets/books"
 	"github.com/tslight/naeq/pkg/alw"
 	"github.com/tslight/naeq/pkg/efs"
 	j "github.com/tslight/naeq/pkg/json"
 	"github.com/tslight/naeq/pkg/log"
-	"time"
 )
 
 var about = `DO WHAT THOU WILT!
@@ -38,11 +39,11 @@ type Data struct {
 }
 
 type Response struct {
-	Liber      interface{}   `json:"liber"`
-	Book       interface{}   `json:"book"`
-	Sum        int           `json:"sum"`
-	MatchCount int           `json:"match_count"`
-	Matches    []interface{} `json:"matches"`
+	Liber      any   `json:"liber"`
+	Book       any   `json:"book"`
+	Sum        int   `json:"sum"`
+	MatchCount int   `json:"match_count"`
+	Matches    []any `json:"matches"`
 }
 
 func aboutHandler(w http.ResponseWriter, r *http.Request) error {
@@ -78,7 +79,7 @@ Available Books:
 	return nil
 }
 
-func buildResponse(words string, book string) (interface{}, error) {
+func buildResponse(words string, book string) (any, error) {
 	i, err := alw.GetSum(words)
 	if err != nil {
 		return nil, err
@@ -107,7 +108,7 @@ func buildResponse(words string, book string) (interface{}, error) {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	var response interface{}
+	var response any
 	var err error
 	var book string
 
