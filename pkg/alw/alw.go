@@ -1,7 +1,6 @@
 package alw
 
 import (
-	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -41,7 +40,15 @@ func GetSum(s string) (int, error) {
 
 func GetMatches(sum int, b map[string]any) []any {
 	key := strconv.Itoa(sum)
-	matches := reflect.ValueOf(b[key]).Interface().([]any)
+	value, exists := b[key]
+	if !exists || value == nil {
+		return []any{}
+	}
+
+	matches, ok := value.([]any)
+	if !ok {
+		return []any{}
+	}
 
 	return matches
 }

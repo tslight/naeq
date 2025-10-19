@@ -134,3 +134,192 @@ func TestGetMatchesFooBarBazLiberI(t *testing.T) {
 		t.Fatalf(`GetMatches(%s %s)\nWanted: %v\nReceived: %v`, s, b, want, got)
 	}
 }
+
+// TestGetSumOnlyNumbers tests GetSum with numeric string
+func TestGetSumOnlyNumbers(t *testing.T) {
+	s := "123"
+	got, err := GetSum(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := 123
+	if got != want {
+		t.Fatalf("GetSum('%s') returned %d, expected %d", s, got, want)
+	}
+}
+
+// TestGetSumWithOnlySpecialChars tests GetSum with only special characters
+func TestGetSumWithOnlySpecialChars(t *testing.T) {
+	s := "!@#$%^&*()"
+	got, err := GetSum(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Special chars are stripped, so should be 0
+	if got < 0 {
+		t.Fatalf("GetSum('%s') returned negative value %d", s, got)
+	}
+}
+
+// TestGetSumWithMixedCase tests GetSum with mixed case letters
+func TestGetSumWithMixedCase(t *testing.T) {
+	s1 := "ABC"
+	s2 := "abc"
+	got1, err := GetSum(s1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got2, err := GetSum(s2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Should be the same since lowercase is applied
+	if got1 != got2 {
+		t.Fatalf("GetSum('ABC')=%d should equal GetSum('abc')=%d", got1, got2)
+	}
+}
+
+// TestGetSumWithEmptyString tests GetSum with empty string
+func TestGetSumWithEmptyString(t *testing.T) {
+	s := ""
+	got, err := GetSum(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != 0 {
+		t.Fatalf("GetSum('') returned %d, expected 0", got)
+	}
+}
+
+// TestGetSumWithWhitespace tests GetSum with whitespace only
+func TestGetSumWithWhitespace(t *testing.T) {
+	s := "   a   b   c   "
+	got, err := GetSum(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// Should be same as "abc"
+	expected, _ := GetSum("abc")
+	if got != expected {
+		t.Fatalf("GetSum with whitespace returned %d, expected %d", got, expected)
+	}
+}
+
+// TestSumNumbersInStringWithNoNumbers tests sumNumbersInString with no numbers
+func TestSumNumbersInStringWithNoNumbers(t *testing.T) {
+	s := "hello world"
+	got, err := sumNumbersInString(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got != 0 {
+		t.Fatalf("sumNumbersInString('%s') returned %d, expected 0", s, got)
+	}
+}
+
+// TestSumNumbersInStringWithOnlyNumbers tests sumNumbersInString with only numbers
+func TestSumNumbersInStringWithOnlyNumbers(t *testing.T) {
+	s := "10 20 30"
+	got, err := sumNumbersInString(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := 60
+	if got != want {
+		t.Fatalf("sumNumbersInString('%s') returned %d, expected %d", s, got, want)
+	}
+}
+
+// TestGetMatchesWithNoMatches tests GetMatches when sum doesn't exist in book
+func TestGetMatchesWithNoMatches(t *testing.T) {
+	b := map[string]any{
+		"999999": []any{},
+	}
+	got := GetMatches(999999, b)
+	// Should now return empty array instead of panicking
+	if len(got) != 0 {
+		t.Fatalf("GetMatches with no matching sum returned %v", got)
+	}
+}
+
+// TestGetMatchesWithZeroSum tests GetMatches with sum 0 (common edge case)
+func TestGetMatchesWithZeroSum(t *testing.T) {
+	b := map[string]any{
+		"32": []any{"test"},
+	}
+	got := GetMatches(0, b)
+	// Sum 0 doesn't exist in book, should return empty array
+	if len(got) != 0 {
+		t.Fatalf("GetMatches with sum 0 should return empty array, got: %v", got)
+	}
+}
+
+// TestGetMatchesWithEmptyBook tests GetMatches with empty book
+func TestGetMatchesWithEmptyBook(t *testing.T) {
+	b := map[string]any{}
+	got := GetMatches(32, b)
+	if len(got) != 0 {
+		t.Fatalf("GetMatches with empty book should return empty array, got: %v", got)
+	}
+}
+
+// TestGetMatchesWithNilValue tests GetMatches when key value is not a slice
+func TestGetMatchesWithNilValue(t *testing.T) {
+	b := map[string]any{
+		"32": nil,
+	}
+	got := GetMatches(32, b)
+	if len(got) != 0 {
+		t.Fatalf("GetMatches with nil value should return empty array, got: %v", got)
+	}
+}
+
+// TestGetMatchesWithInvalidType tests GetMatches when key value is wrong type
+func TestGetMatchesWithInvalidType(t *testing.T) {
+	b := map[string]any{
+		"32": "not a slice",
+	}
+	got := GetMatches(32, b)
+	if len(got) != 0 {
+		t.Fatalf("GetMatches with invalid type should return empty array, got: %v", got)
+	}
+}
+
+// TestSumNumbersInStringWithLeadingZeros tests sumNumbersInString with leading zeros
+func TestSumNumbersInStringWithLeadingZeros(t *testing.T) {
+	s := "007 008 009"
+	got, err := sumNumbersInString(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := 24 // 7 + 8 + 9
+	if got != want {
+		t.Fatalf("sumNumbersInString('%s') returned %d, expected %d", s, got, want)
+	}
+}
+
+// TestGetSumWithConsecutiveNumbers tests GetSum with numbers back-to-back
+func TestGetSumWithConsecutiveNumbers(t *testing.T) {
+	s := "12345abc"
+	got, err := GetSum(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	// numbers: 12345, letters: abc = 1+2+3 = 6, total 12345+6 = 12351
+	if got <= 12345 {
+		t.Fatalf("GetSum('%s') returned %d, expected > 12345", s, got)
+	}
+}
+
+// TestSumNumbersInStringVeryLargeNumbers tests with very large number sequences
+func TestSumNumbersInStringVeryLargeNumbers(t *testing.T) {
+	s := "9999999 1 1"
+	got, err := sumNumbersInString(s)
+	if err != nil {
+		t.Fatal(err)
+	}
+	want := 10000001
+	if got != want {
+		t.Fatalf("sumNumbersInString('%s') returned %d, expected %d", s, got, want)
+	}
+}
